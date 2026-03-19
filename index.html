@@ -166,14 +166,14 @@ th,td{border:1px solid hotpink;padding:6px;text-align:center}
 
 <script>
 window.onload=function(){
-const S=document.getElementById.bind(document);
+const S=id=>document.getElementById(id);
 const settingsBtn=S("settingsBtn"),settingsPanel=S("settingsPanel"),bgUpload=S("bgUpload"),bgFit=S("bgFit"),bgDark=S("bgDark"),bgBlur=S("bgBlur"),colLeft=S("colLeft"),colCenter=S("colCenter"),colRight=S("colRight"),themeSelect=S("themeSelect"),notes=S("notes"),sheet=S("sheet"),timeDisplay=S("timeDisplay"),bar=S("bar"),goalPopup=S("goalPopup"),commentInput=S("commentInput"),comments=S("comments");
 let goalShown=false;
 
-// Settings toggle
+// SETTINGS TOGGLE
 settingsBtn.onclick=()=>settingsPanel.classList.toggle("open");
 
-// Backgrounds
+// BACKGROUND
 const bg=document.createElement("div"),overlay=document.createElement("div");
 bg.id="customBG";overlay.id="bgOverlay";document.body.appendChild(bg);document.body.appendChild(overlay);
 if(localStorage.bgImage) bg.style.backgroundImage=`url(${localStorage.bgImage})`;
@@ -188,28 +188,29 @@ bgBlur.oninput=()=>{overlay.style.backdropFilter=`blur(${bgBlur.value}px)`;local
 function applyBgFit(v){switch(v){case"fill":bg.style.backgroundSize="cover";bg.style.backgroundRepeat="no-repeat";bg.style.backgroundPosition="center";break;case"fit":bg.style.backgroundSize="contain";bg.style.backgroundRepeat="no-repeat";bg.style.backgroundPosition="center";break;case"stretch":bg.style.backgroundSize="100% 100%";bg.style.backgroundRepeat="no-repeat";bg.style.backgroundPosition="center";break;case"tile":bg.style.backgroundSize="auto";bg.style.backgroundRepeat="repeat";bg.style.backgroundPosition="top left";break;case"center":bg.style.backgroundSize="auto";bg.style.backgroundRepeat="no-repeat";bg.style.backgroundPosition="center";break;case"span":bg.style.backgroundSize="cover";bg.style.backgroundRepeat="no-repeat";bg.style.backgroundPosition="center";break;} }
 function resetBG(){localStorage.removeItem("bgImage");localStorage.removeItem("bgFit");localStorage.removeItem("bgDark");localStorage.removeItem("bgBlur");location.reload();}
 
-// Column widths
+// COLUMN WIDTHS
 function applyColWidths(){let l=Number(colLeft.value),c=Number(colCenter.value),r=Number(colRight.value),t=l+c+r;if(t!==100){l=Math.round(l/t*100);c=Math.round(c/t*100);r=100-l-c;}document.querySelector(".container").style.gridTemplateColumns=`${l}% ${c}% ${r}%`;localStorage.colLeft=l;localStorage.colCenter=c;localStorage.colRight=r;}
 colLeft.value=localStorage.colLeft||colLeft.value;
 colCenter.value=localStorage.colCenter||colCenter.value;
 colRight.value=localStorage.colRight||colRight.value;
 applyColWidths();
 
-// Theme
+// THEME
 const themeColors={scene:"#ff00aa",kawaii:"#ff1493",pastel:"#9966ff",gothic:"#ff66cc",emo:"red",neon:"#39ff14",y2k:"white"};
 themeSelect.value=localStorage.theme||"scene";
 document.body.classList.add(themeSelect.value,"compact");
 themeSelect.onchange=()=>{
   Object.keys(themeColors).forEach(t=>document.body.classList.remove(t));
   document.body.classList.add(themeSelect.value,"compact");
-  localStorage.theme=themeSelect.value;updateTotal();
+  localStorage.theme=themeSelect.value;
+  updateTotal();
 };
 
-// Notes
+// NOTES
 notes.value=localStorage.notes||"";
 notes.oninput=()=>localStorage.notes=notes.value;
 
-// Rows
+// ROWS
 function addRow(d={}) {
   const row = sheet.insertRow();
   const start = document.createElement("input");
@@ -219,16 +220,14 @@ function addRow(d={}) {
 
   start.type="time"; end.type="time"; mins.type="number"; mins.readOnly=true; del.textContent="❌";
 
-  del.onclick = ()=>{row.remove();saveRows();updateTotal();};
+  del.onclick = ()=>{row.remove(); saveRows(); updateTotal();};
 
   if(sheet.rows.length>1 && !d.start){
     const prevEnd = sheet.rows[sheet.rows.length-1].cells[1].querySelector("input");
     if(prevEnd && prevEnd.value) start.value = prevEnd.value;
   }
 
-  start.value = d.start||"";
-  end.value = d.end||"";
-  mins.value = d.mins||"";
+  start.value=d.start||""; end.value=d.end||""; mins.value=d.mins||"";
 
   row.insertCell(0).appendChild(start);
   row.insertCell(1).appendChild(end);
@@ -236,29 +235,44 @@ function addRow(d={}) {
   row.insertCell(3).appendChild(del);
 
   function calc(){
-    if(!start.value || !end.value){mins.value=""; updateTotal(); return;}
-    const [sh,sm]=start.value.split(":").map(Number);
-    const [eh,em]=end.value.split(":").map(Number);
+    if(!start.value||!end.value){ mins.value=""; updateTotal(); return; }
+    const [sh,sm]=start.value.split(":").map(x=>parseInt(x,10));
+    const [eh,em]=end.value.split(":").map(x=>parseInt(x,10));
+    if([sh,sm,eh,em].some(x=>isNaN(x))){ mins.value=""; updateTotal(); return; }
     let diff=(eh*60+em)-(sh*60+sm); if(diff<0) diff=0;
     mins.value=diff;
     saveRows(); updateTotal();
   }
 
-  start.onchange=start.onblur=end.onchange=end.onblur=calc;
+  start.addEventListener("change", calc);
+  start.addEventListener("blur", calc);
+  end.addEventListener("change", calc);
+  end.addEventListener("blur", calc);
 }
 
-function saveRows(){let data=[];document.querySelectorAll("#sheet tr").forEach((r,i)=>{if(i===0)return;const inputs=r.querySelectorAll("input");data.push({start:inputs[0].value,end:inputs[1].value,mins:inputs[2].value})});localStorage.rows=JSON.stringify(data);}
-function loadRows(){let data=[];try{data=JSON.parse(localStorage.rows||"[]");}catch(e){localStorage.removeItem("rows");}if(data.length===0)addRow();else data.forEach(d=>addRow(d));addRow();updateTotal();}
-function clearRows(){localStorage.removeItem("rows");location.reload();}
+function saveRows(){
+  const data=[]; document.querySelectorAll("#sheet tr").forEach((r,i)=>{
+    if(i===0) return;
+    const inputs=r.querySelectorAll("input");
+    data.push({start:inputs[0].value,end:inputs[1].value,mins:inputs[2].value});
+  });
+  localStorage.rows=JSON.stringify(data);
+}
+function loadRows(){
+  let data=[];
+  try{data=JSON.parse(localStorage.rows||"[]");}catch(e){localStorage.removeItem("rows");}
+  if(data.length===0) addRow(); else data.forEach(d=>addRow(d)); addRow(); updateTotal();
+}
+function clearRows(){localStorage.removeItem("rows"); location.reload();}
 
-// Comments
+// COMMENTS
 function postComment(){if(!commentInput.value.trim())return;const d=document.createElement("div");const now=new Date();d.textContent=`[${now.getHours().toString().padStart(2,"0")}:${now.getMinutes().toString().padStart(2,"0")}] ${commentInput.value}`;comments.appendChild(d);let saved=[];try{saved=JSON.parse(localStorage.comments||"[]");}catch(e){}saved.push(d.textContent);localStorage.comments=JSON.stringify(saved);commentInput.value="";}
 function loadComments(){let saved=[];try{saved=JSON.parse(localStorage.comments||"[]");}catch(e){}saved.forEach(c=>{const d=document.createElement("div");d.textContent=c;comments.appendChild(d);});}
 
-// Update total + neon
+// TOTAL + GRAPH
 function updateTotal(){
   let total=0;
-  document.querySelectorAll("#sheet tr").forEach((r,i)=>{if(i===0)return;const v=r.cells[2].firstChild.value;if(v) total+=Number(v);});
+  document.querySelectorAll("#sheet tr").forEach((r,i)=>{if(i===0) return; const v=r.cells[2].firstChild.value; if(v) total+=Number(v);});
   const h=Math.floor(total/60), m=total%60;
   timeDisplay.innerText=total?`${total} min (${h}h ${m}m)`:"";
   const pct=Math.min(total/480,1)*100;
@@ -271,8 +285,9 @@ function updateTotal(){
   if(total>=480 && !goalShown){ goalPopup.style.display="block"; goalShown=true; setTimeout(()=>{goalPopup.style.display="none"; goalShown=false;},3000);}
 }
 
+// INIT
 loadRows(); loadComments();
-}
+};
 </script>
 </body>
 </html>
