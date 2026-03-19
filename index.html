@@ -5,12 +5,7 @@
 <title>MySpace Productivity</title>
 <style>
 /* ---------- BASE ---------- */
-body{
-  margin:0;
-  font-family:"Comic Sans MS",cursive;
-  background:#111;
-  color:#ff66cc;
-}
+body{margin:0;font-family:"Comic Sans MS",cursive;background:#111;color:#ff66cc}
 body.scene{color:#ff00aa}
 body.kawaii{color:#ff1493}
 body.pastel{color:#9966ff}
@@ -31,41 +26,19 @@ table.compact th,table.compact td{padding:2px;font-size:11px}
 #comments.compact{max-height:100px;font-size:11px}
 
 /* HEADER */
-.header{
-  background:#ff0099;
-  padding:12px;
-  text-align:center;
-  font-size:22px;
-  color:white;
-}
+.header{background:#ff0099;padding:12px;text-align:center;font-size:22px;color:white}
 
 /* LAYOUT */
-.container{
-  display:grid;
-  grid-template-columns:25% 50% 25%;
-  gap:15px;
-  padding:15px;
-}
-@media(max-width:900px){.container{grid-template-columns:1fr;}}
+.container{display:grid;grid-template-columns:25% 50% 25%;gap:15px;padding:15px}
+@media(max-width:900px){.container{grid-template-columns:1fr}}
 
 /* BOX */
-.box{
-  background:rgba(20,20,20,0.85);
-  border:3px solid hotpink;
-  padding:12px;
-  border-radius:10px;
-}
+.box{background:rgba(20,20,20,0.85);border:3px solid hotpink;padding:12px;border-radius:10px}
 
 /* INPUTS */
-input,select,textarea,button{
-  width:100%;
-  margin-top:5px;
-  padding:8px;
-  border-radius:6px;
-  font-size:16px;
-}
-input,textarea,select{background:black;color:#ff66cc;border:1px solid hotpink;}
-button{background:#ff0099;color:white;border:none;cursor:pointer;}
+input,select,textarea,button{width:100%;margin-top:5px;padding:8px;border-radius:6px;font-size:16px}
+input,textarea,select{background:black;color:#ff66cc;border:1px solid hotpink}
+button{background:#ff0099;color:white;border:none;cursor:pointer}
 button:hover{opacity:0.85}
 
 /* TABLE */
@@ -77,55 +50,43 @@ th,td{border:1px solid hotpink;padding:6px;text-align:center}
 #bar{height:100%;width:0%;background:hotpink;transition:width 0.5s;border-radius:8px}
 
 /* COMMENTS */
-#comments{height:120px;overflow:auto;background:black;padding:6px;border:1px solid hotpink;}
+#comments{height:120px;overflow:auto;background:black;padding:6px;border:1px solid hotpink}
 
 /* SETTINGS */
-#settingsBtn{position:fixed;top:10px;right:10px;z-index:999;padding:10px;}
-#settingsPanel{
-  position:fixed;top:0;right:-300px;width:300px;height:100%;background:#111;
-  border-left:3px solid hotpink;padding:15px;transition:0.3s;z-index:998;
-}
+#settingsBtn{position:fixed;top:10px;right:10px;z-index:999;padding:10px}
+#settingsPanel{position:fixed;top:0;right:-300px;width:300px;height:100%;background:#111;border-left:3px solid hotpink;padding:15px;transition:0.3s;z-index:998}
 #settingsPanel.open{right:0}
 
 /* BACKGROUNDS */
-#customBG{position:fixed;top:0;left:0;width:100%;height:100%;z-index:-3;background-size:cover;background-position:center;}
-#bgOverlay{position:fixed;top:0;left:0;width:100%;height:100%;background:black;opacity:0;z-index:-2;backdrop-filter:blur(0px);}
-#asciiBG{position:fixed;top:0;left:0;width:100%;height:100%;z-index:-1;color:#ff66cc;font-family:"Comic Sans MS",cursive;font-size:10px;line-height:10px;white-space:pre;pointer-events:none;opacity:0.25;text-align:center;}
+#customBG{position:fixed;top:0;left:0;width:100%;height:100%;z-index:-3;background-size:cover;background-position:center}
+#bgOverlay{position:fixed;top:0;left:0;width:100%;height:100%;background:black;opacity:0;z-index:-2;backdrop-filter:blur(0px)}
+#asciiBG{position:fixed;top:0;left:0;width:100%;height:100%;z-index:-1;color:#ff66cc;font-family:"Comic Sans MS",cursive;font-size:10px;line-height:10px;white-space:pre;pointer-events:none;opacity:0.25;text-align:center}
 
 /* POPUP */
-#goalPopup{
-  position:fixed;top:40%;left:50%;transform:translate(-50%,-50%);
-  background:#ff0099;padding:20px;display:none;color:white;
-}
+#goalPopup{position:fixed;top:40%;left:50%;transform:translate(-50%,-50%);background:#ff0099;padding:20px;display:none;color:white}
 
 /* NEON PULSE ANIMATION */
-@keyframes neonPulse{
-  0%{box-shadow:0 0 8px currentColor;}
-  50%{box-shadow:0 0 20px currentColor;}
-  100%{box-shadow:0 0 8px currentColor;}
-}
+@keyframes neonPulse{0%{box-shadow:0 0 8px currentColor}50%{box-shadow:0 0 20px currentColor}100%{box-shadow:0 0 8px currentColor}}
 #bar.pulse,#goalPopup.pulse{animation:neonPulse 1s infinite alternate;border-radius:8px}
 
 /* MOBILE FRIENDLY */
 @media(max-width:768px){
-  body{font-size:12px;}
-  .container{grid-template-columns:1fr !important;gap:6px;padding:6px;}
-  .box{font-size:12px;padding:6px;border-width:1.5px;}
-  input,select,textarea,button{font-size:12px;padding:4px;}
-  table,th,td{font-size:11px;padding:2px;}
-  #settingsPanel{width:260px !important;right:-260px !important;}
-  #settingsPanel.open{right:0 !important;}
-  #settingsBtn{top:5px;right:5px;padding:4px;font-size:12px;}
-  #comments{max-height:100px;}
-  #graph{height:12px;}
-  .header{font-size:14px;padding:4px;}
+  body{font-size:12px}
+  .container{grid-template-columns:1fr !important;gap:6px;padding:6px}
+  .box{font-size:12px;padding:6px;border-width:1.5px}
+  input,select,textarea,button{font-size:12px;padding:4px}
+  table,th,td{font-size:11px;padding:2px}
+  #settingsPanel{width:260px !important;right:-260px !important}
+  #settingsPanel.open{right:0 !important}
+  #settingsBtn{top:5px;right:5px;padding:4px;font-size:12px}
+  #comments{max-height:100px}
+  #graph{height:12px}
+  .header{font-size:14px;padding:4px}
 }
 </style>
 </head>
-
 <body class="scene compact">
 
-<!-- SETTINGS -->
 <button id="settingsBtn" class="compact">⚙️</button>
 <div id="settingsPanel">
 <h3>Customize</h3>
@@ -249,8 +210,44 @@ notes.value=localStorage.notes||"";
 notes.oninput=()=>localStorage.notes=notes.value;
 
 // Rows
-function addRow(d={}){const row=sheet.insertRow();const start=document.createElement("input"),end=document.createElement("input"),mins=document.createElement("input"),del=document.createElement("button");start.type="time";end.type="time";mins.type="number";mins.readOnly=true;del.textContent="❌";del.onclick=()=>{row.remove();saveRows();updateTotal();};if(sheet.rows.length>1){const le=sheet.rows[sheet.rows.length-1].cells[1].querySelector("input");if(le&&le.value&&!d.start)start.value=le.value;}start.value=d.start||"";end.value=d.end||"";mins.value=d.mins||"";row.insertCell(0).appendChild(start);row.insertCell(1).appendChild(end);row.insertCell(2).appendChild(mins);row.insertCell(3).appendChild(del);function calc(){if(!start.value||!end.value)return;let s=new Date("1970-01-01T"+start.value),e=new Date("1970-01-01T"+end.value);let diff=(e-s)/60000;if(diff<0)diff=0;mins.value=Math.round(diff);saveRows();updateTotal();if(row===sheet.rows[sheet.rows.length-1]&&end.value&&diff>0)addRow();}start.onchange=start.onblur=end.onchange=end.onblur=calc;}
-function saveRows(){let data=[];document.querySelectorAll("#sheet tr").forEach((r,i)=>{if(i===0)return;const inputs=r.querySelectorAll("input");data.push({start:inputs[0].value,end:inputs[1].value,mins:inputs[2].value});});localStorage.rows=JSON.stringify(data);}
+function addRow(d={}) {
+  const row = sheet.insertRow();
+  const start = document.createElement("input");
+  const end = document.createElement("input");
+  const mins = document.createElement("input");
+  const del = document.createElement("button");
+
+  start.type="time"; end.type="time"; mins.type="number"; mins.readOnly=true; del.textContent="❌";
+
+  del.onclick = ()=>{row.remove();saveRows();updateTotal();};
+
+  if(sheet.rows.length>1 && !d.start){
+    const prevEnd = sheet.rows[sheet.rows.length-1].cells[1].querySelector("input");
+    if(prevEnd && prevEnd.value) start.value = prevEnd.value;
+  }
+
+  start.value = d.start||"";
+  end.value = d.end||"";
+  mins.value = d.mins||"";
+
+  row.insertCell(0).appendChild(start);
+  row.insertCell(1).appendChild(end);
+  row.insertCell(2).appendChild(mins);
+  row.insertCell(3).appendChild(del);
+
+  function calc(){
+    if(!start.value || !end.value){mins.value=""; updateTotal(); return;}
+    const [sh,sm]=start.value.split(":").map(Number);
+    const [eh,em]=end.value.split(":").map(Number);
+    let diff=(eh*60+em)-(sh*60+sm); if(diff<0) diff=0;
+    mins.value=diff;
+    saveRows(); updateTotal();
+  }
+
+  start.onchange=start.onblur=end.onchange=end.onblur=calc;
+}
+
+function saveRows(){let data=[];document.querySelectorAll("#sheet tr").forEach((r,i)=>{if(i===0)return;const inputs=r.querySelectorAll("input");data.push({start:inputs[0].value,end:inputs[1].value,mins:inputs[2].value})});localStorage.rows=JSON.stringify(data);}
 function loadRows(){let data=[];try{data=JSON.parse(localStorage.rows||"[]");}catch(e){localStorage.removeItem("rows");}if(data.length===0)addRow();else data.forEach(d=>addRow(d));addRow();updateTotal();}
 function clearRows(){localStorage.removeItem("rows");location.reload();}
 
@@ -259,9 +256,22 @@ function postComment(){if(!commentInput.value.trim())return;const d=document.cre
 function loadComments(){let saved=[];try{saved=JSON.parse(localStorage.comments||"[]");}catch(e){}saved.forEach(c=>{const d=document.createElement("div");d.textContent=c;comments.appendChild(d);});}
 
 // Update total + neon
-function updateTotal(){let total=0;document.querySelectorAll("#sheet tr").forEach((r,i)=>{if(i===0)return;const v=r.cells[2].firstChild.value;if(v)total+=Number(v);});const h=Math.floor(total/60),m=total%60;timeDisplay.innerText=total?`${total} min (${h}h ${m}m)`:"";const pct=Math.min(total/480,1)*100;bar.style.width=pct+"%";const color=themeColors[themeSelect.value]||"hotpink";bar.style.backgroundColor=color;goalPopup.style.color=color;if(total>0&&total<480){const glow=Math.max(8,pct/5+8);bar.style.boxShadow=`0 0 ${glow}px ${color}`;goalPopup.style.boxShadow=`0 0 ${glow}px ${color}`;}if(total>=384&&total<480){bar.classList.add("pulse");goalPopup.classList.add("pulse");}else{bar.classList.remove("pulse");goalPopup.classList.remove("pulse");}if(total>=480&&!goalShown){goalPopup.style.display="block";goalShown=true;setTimeout(()=>{goalPopup.style.display="none";goalShown=false;},3000);}}
+function updateTotal(){
+  let total=0;
+  document.querySelectorAll("#sheet tr").forEach((r,i)=>{if(i===0)return;const v=r.cells[2].firstChild.value;if(v) total+=Number(v);});
+  const h=Math.floor(total/60), m=total%60;
+  timeDisplay.innerText=total?`${total} min (${h}h ${m}m)`:"";
+  const pct=Math.min(total/480,1)*100;
+  bar.style.width=pct+"%";
+  const color=themeColors[themeSelect.value]||"hotpink";
+  bar.style.backgroundColor=color; goalPopup.style.color=color;
 
-loadRows();loadComments();
+  if(total>0 && total<480){ const glow=Math.max(8,pct/5+8); bar.style.boxShadow=`0 0 ${glow}px ${color}`; goalPopup.style.boxShadow=`0 0 ${glow}px ${color}`;}
+  if(total>=384 && total<480){ bar.classList.add("pulse"); goalPopup.classList.add("pulse"); } else { bar.classList.remove("pulse"); goalPopup.classList.remove("pulse"); }
+  if(total>=480 && !goalShown){ goalPopup.style.display="block"; goalShown=true; setTimeout(()=>{goalPopup.style.display="none"; goalShown=false;},3000);}
+}
+
+loadRows(); loadComments();
 }
 </script>
 </body>
