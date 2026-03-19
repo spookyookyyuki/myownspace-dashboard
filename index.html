@@ -33,7 +33,7 @@ body.y2k{color:white}
 /* LAYOUT */
 .container{
   display:grid;
-  grid-template-columns:250px 1fr 250px;
+  grid-template-columns:25% 50% 25%;
   gap:15px;
   padding:15px;
 }
@@ -99,8 +99,8 @@ th,td{border:1px solid hotpink;padding:6px;text-align:center}
 #settingsPanel{
   position:fixed;
   top:0;
-  right:-260px;
-  width:260px;
+  right:-300px;
+  width:300px;
   height:100%;
   background:#111;
   border-left:3px solid hotpink;
@@ -145,6 +145,24 @@ th,td{border:1px solid hotpink;padding:6px;text-align:center}
   display:none;
   color:white;
 }
+
+/* iPHONE / MOBILE FRIENDLY */
+@media (max-width: 768px){
+  .container{
+    grid-template-columns:1fr !important;
+    gap:10px;
+    padding:10px;
+  }
+
+  .box{font-size:16px;}
+  input, select, textarea, button{font-size:18px; padding:12px;}
+  table, th, td{font-size:14px;}
+  #settingsPanel{width:100% !important; right:-100% !important;}
+  #settingsPanel.open{right:0 !important;}
+  #settingsBtn{top:5px; right:5px; padding:12px; font-size:18px;}
+  #comments{max-height:200px;}
+  #graph{height:20px;}
+}
 </style>
 </head>
 
@@ -159,27 +177,38 @@ th,td{border:1px solid hotpink;padding:6px;text-align:center}
   <label>Background</label>
   <input type="file" id="bgUpload">
 
-  <label>Size</label>
-  <select id="bgSize">
-    <option value="cover">Cover</option>
-    <option value="contain">Contain</option>
-    <option value="auto">Auto</option>
+  <label>Background Fit</label>
+  <select id="bgFit">
+    <option value="fill">Fill</option>
+    <option value="fit">Fit</option>
+    <option value="stretch">Stretch</option>
+    <option value="tile">Tile</option>
+    <option value="center">Center</option>
+    <option value="span">Span</option>
   </select>
 
-  <label>Dark</label>
+  <label>Dark Overlay</label>
   <input type="range" id="bgDark" min="0" max="0.8" step="0.05">
 
   <label>Blur</label>
   <input type="range" id="bgBlur" min="0" max="10">
 
-  <button onclick="resetBG()">Reset</button>
+  <h3>Column Widths</h3>
+  <label>Left Column (%)</label>
+  <input type="number" id="colLeft" min="10" max="50" value="25">
+  <label>Center Column (%)</label>
+  <input type="number" id="colCenter" min="30" max="80" value="50">
+  <label>Right Column (%)</label>
+  <input type="number" id="colRight" min="10" max="50" value="25">
+  <button onclick="applyColWidths()">Apply Column Widths</button>
+
+  <button onclick="resetBG()">Reset Background</button>
 </div>
 
 <div class="header">MySpace Productivity ✨</div>
 
 <div class="container">
 
-<!-- LEFT -->
 <div class="box">
 <h4>Theme</h4>
 <select id="themeSelect">
@@ -193,21 +222,17 @@ th,td{border:1px solid hotpink;padding:6px;text-align:center}
 </select>
 </div>
 
-<!-- CENTER -->
 <div class="box">
 <h3>Production Time</h3>
 <table id="sheet">
 <tr><th>Start</th><th>End</th><th>Minutes</th></tr>
 </table>
-
 <button onclick="addRow()">+ Add Row</button>
 <button onclick="clearRows()">Clear</button>
-
 <div id="timeDisplay"></div>
 <div id="graph"><div id="bar"></div></div>
 </div>
 
-<!-- RIGHT -->
 <div>
 <div class="box">
 <h3>Notes</h3>
@@ -229,54 +254,59 @@ th,td{border:1px solid hotpink;padding:6px;text-align:center}
 <div id="goalPopup">✨ Goal Reached! ✨</div>
 
 <script>
-const sheet = document.getElementById("sheet")
+const sheet=document.getElementById("sheet")
+settingsBtn.onclick = ()=>settingsPanel.classList.toggle("open")
 
-/* SETTINGS PANEL */
-settingsBtn.onclick = () => settingsPanel.classList.toggle("open")
-
-/* BACKGROUND ELEMENTS */
-const bg = document.createElement("div")
-bg.id="customBG"
-document.body.appendChild(bg)
-
-const overlay = document.createElement("div")
-overlay.id="bgOverlay"
-document.body.appendChild(overlay)
-
-/* LOAD BG */
+/* BACKGROUND */
+const bg=document.createElement("div"); bg.id="customBG"; document.body.appendChild(bg)
+const overlay=document.createElement("div"); overlay.id="bgOverlay"; document.body.appendChild(overlay)
 if(localStorage.bgImage) bg.style.backgroundImage=`url(${localStorage.bgImage})`
-if(localStorage.bgSize) bg.style.backgroundSize=localStorage.bgSize
+if(localStorage.bgFit) applyBgFit(localStorage.bgFit)
 if(localStorage.bgDark) overlay.style.opacity=localStorage.bgDark
 if(localStorage.bgBlur) overlay.style.backdropFilter=`blur(${localStorage.bgBlur}px)`
 
 bgUpload.onchange=e=>{
   let r=new FileReader()
-  r.onload=()=>{
-    bg.style.backgroundImage=`url(${r.result})`
-    localStorage.bgImage=r.result
-  }
+  r.onload=()=>{bg.style.backgroundImage=`url(${r.result})`; localStorage.bgImage=r.result}
   r.readAsDataURL(e.target.files[0])
 }
 
-bgSize.onchange=()=>{bg.style.backgroundSize=bgSize.value;localStorage.bgSize=bgSize.value}
-bgDark.oninput=()=>{overlay.style.opacity=bgDark.value;localStorage.bgDark=bgDark.value}
-bgBlur.oninput=()=>{overlay.style.backdropFilter=`blur(${bgBlur.value}px)`;localStorage.bgBlur=bgBlur.value}
+bgFit.value=localStorage.bgFit||"fill"
+bgFit.onchange=()=>{applyBgFit(bgFit.value); localStorage.bgFit=bgFit.value}
 
-function resetBG(){
-  localStorage.removeItem("bgImage")
-  localStorage.removeItem("bgSize")
-  localStorage.removeItem("bgDark")
-  localStorage.removeItem("bgBlur")
-  location.reload()
+function applyBgFit(value){
+  switch(value){
+    case "fill": bg.style.backgroundSize="cover"; bg.style.backgroundRepeat="no-repeat"; bg.style.backgroundPosition="center"; break;
+    case "fit": bg.style.backgroundSize="contain"; bg.style.backgroundRepeat="no-repeat"; bg.style.backgroundPosition="center"; break;
+    case "stretch": bg.style.backgroundSize="100% 100%"; bg.style.backgroundRepeat="no-repeat"; bg.style.backgroundPosition="center"; break;
+    case "tile": bg.style.backgroundSize="auto"; bg.style.backgroundRepeat="repeat"; bg.style.backgroundPosition="top left"; break;
+    case "center": bg.style.backgroundSize="auto"; bg.style.backgroundRepeat="no-repeat"; bg.style.backgroundPosition="center"; break;
+    case "span": bg.style.backgroundSize="cover"; bg.style.backgroundRepeat="no-repeat"; bg.style.backgroundPosition="center"; break;
+  }
 }
+
+bgDark.oninput=()=>{overlay.style.opacity=bgDark.value; localStorage.bgDark=bgDark.value}
+bgBlur.oninput=()=>{overlay.style.backdropFilter=`blur(${bgBlur.value}px)`; localStorage.bgBlur=bgBlur.value}
+
+function resetBG(){localStorage.removeItem("bgImage"); localStorage.removeItem("bgFit"); localStorage.removeItem("bgDark"); localStorage.removeItem("bgBlur"); location.reload()}
+
+/* COLUMN WIDTHS */
+function applyColWidths(){
+  let l=Number(colLeft.value), c=Number(colCenter.value), r=Number(colRight.value)
+  let total=l+c+r
+  if(total>100){ l=Math.round((l/total)*100); c=Math.round((c/total)*100); r=100-l-c }
+  document.querySelector(".container").style.gridTemplateColumns=`${l}% ${c}% ${r}%`
+  localStorage.colLeft=l; localStorage.colCenter=c; localStorage.colRight=r
+}
+if(localStorage.colLeft) colLeft.value=localStorage.colLeft
+if(localStorage.colCenter) colCenter.value=localStorage.colCenter
+if(localStorage.colRight) colRight.value=localStorage.colRight
+applyColWidths()
 
 /* THEME */
 themeSelect.value=localStorage.theme||"scene"
 document.body.className=themeSelect.value
-themeSelect.onchange=()=>{
-  document.body.className=themeSelect.value
-  localStorage.theme=themeSelect.value
-}
+themeSelect.onchange=()=>{document.body.className=themeSelect.value; localStorage.theme=themeSelect.value}
 
 /* NOTES */
 notes.value=localStorage.notes||""
@@ -285,15 +315,17 @@ notes.oninput=()=>localStorage.notes=notes.value
 /* ROWS */
 function addRow(data={}){
   let row=sheet.insertRow()
-  let start=document.createElement("input")
-  let end=document.createElement("input")
-  let mins=document.createElement("input")
+  let start=document.createElement("input"), end=document.createElement("input"), mins=document.createElement("input")
+  start.type="time"; end.type="time"; mins.type="number"
 
-  start.type="time"
-  end.type="time"
-  mins.type="number"
+  let rows=document.querySelectorAll("#sheet tr")
+  if(rows.length>1){
+    let lastRow=rows[rows.length-2]
+    let lastEnd=lastRow.cells[1].querySelector("input")
+    if(lastEnd && lastEnd.value && !data.start) start.value=lastEnd.value
+  }
 
-  start.value=data.start||""
+  start.value=data.start||start.value||""
   end.value=data.end||""
   mins.value=data.mins||""
 
@@ -302,24 +334,22 @@ function addRow(data={}){
   row.insertCell(2).appendChild(mins)
 
   function calc(){
-    if(!start.value||!end.value)return
+    if(!start.value||!end.value) return
     let s=new Date("1970-01-01T"+start.value)
     let e=new Date("1970-01-01T"+end.value)
     let diff=(e-s)/60000
     if(diff>=0) mins.value=diff
-    saveRows()
-    updateTotal()
+    saveRows(); updateTotal()
+    if(row===sheet.rows[sheet.rows.length-1] && end.value) addRow()
   }
-
-  start.onchange=end.onchange=calc
-  mins.oninput=()=>{saveRows();updateTotal()}
+  start.onchange=start.onblur=end.onchange=end.onblur=calc
+  mins.oninput=()=>{saveRows(); updateTotal()}
 }
 
-/* SAVE/LOAD */
 function saveRows(){
   let data=[]
   document.querySelectorAll("#sheet tr").forEach((r,i)=>{
-    if(i===0)return
+    if(i===0) return
     let inputs=r.querySelectorAll("input")
     data.push({start:inputs[0].value,end:inputs[1].value,mins:inputs[2].value})
   })
@@ -328,61 +358,45 @@ function saveRows(){
 
 function loadRows(){
   let data=JSON.parse(localStorage.rows||"[]")
-  if(data.length===0){for(let i=0;i<5;i++)addRow()}
+  if(data.length===0) addRow()
   else data.forEach(d=>addRow(d))
+  addRow()
   updateTotal()
 }
 
-function clearRows(){
-  localStorage.removeItem("rows")
-  location.reload()
-}
+function clearRows(){localStorage.removeItem("rows"); location.reload()}
 
-/* TOTAL */
 function updateTotal(){
   let total=0
   document.querySelectorAll("#sheet tr").forEach((r,i)=>{
-    if(i===0)return
+    if(i===0) return
     let v=r.cells[2].firstChild.value
     if(v) total+=Number(v)
   })
-
-  let h=Math.floor(total/60),m=total%60
+  let h=Math.floor(total/60), m=total%60
   timeDisplay.innerText=total?`${total} min (${h}h ${m}m)`:""
   bar.style.width=Math.min((total/480)*100,100)+"%"
-
-  if(total>=480){
-    goalPopup.style.display="block"
-    setTimeout(()=>goalPopup.style.display="none",3000)
-  }
+  if(total>=480){goalPopup.style.display="block"; setTimeout(()=>goalPopup.style.display="none",3000)}
 }
 
 /* COMMENTS */
 function postComment(){
-  if(!commentInput.value.trim())return
+  if(!commentInput.value.trim()) return
   let d=document.createElement("div")
   d.textContent=commentInput.value
   comments.appendChild(d)
-
   let saved=JSON.parse(localStorage.comments||"[]")
   saved.push(commentInput.value)
   localStorage.comments=JSON.stringify(saved)
-
   commentInput.value=""
 }
-
 function loadComments(){
   let saved=JSON.parse(localStorage.comments||"[]")
-  saved.forEach(c=>{
-    let d=document.createElement("div")
-    d.textContent=c
-    comments.appendChild(d)
-  })
+  saved.forEach(c=>{ let d=document.createElement("div"); d.textContent=c; comments.appendChild(d) })
 }
 
 loadRows()
 loadComments()
 </script>
-
 </body>
 </html>
