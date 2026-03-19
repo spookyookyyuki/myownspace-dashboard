@@ -2,35 +2,65 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>MySpace Productivity</title>
-
+<title>MySpace Productivity 2.0</title>
 <style>
-body{
+body {
   margin:0;
   font-family:"Comic Sans MS",cursive;
   background:#111;
   color:#ff66cc;
+  transition: background 0.3s, color 0.3s;
 }
 
 /* THEMES */
-body.scene{color:#ff00aa}
-body.kawaii{color:#ff1493}
-body.pastel{color:#9966ff}
-body.gothic{color:#ff66cc}
-body.emo{color:red;font-family:"Courier New"}
-body.neon{color:#39ff14;text-shadow:0 0 6px #39ff14}
-body.y2k{color:white}
+body.scene {color:#ff00aa;}
+body.kawaii {color:#ff1493;}
+body.pastel {color:#9966ff;}
+body.gothic {color:#ff66cc;}
+body.emo {color:red;font-family:"Courier New";}
+body.neon {color:#39ff14;text-shadow:0 0 6px #39ff14;}
+body.y2k {color:white;}
 
 /* HEADER */
 .header{
+  position:sticky;
+  top:0;
   background:#ff0099;
   padding:12px;
   text-align:center;
   font-size:22px;
   color:white;
+  z-index:100;
 }
 
-/* LAYOUT */
+/* SETTINGS BUTTON */
+#settingsBtn {
+  position:fixed;
+  top:10px;
+  right:10px;
+  z-index:999;
+  padding:10px;
+  font-size:18px;
+  cursor:pointer;
+}
+
+/* SETTINGS PANEL */
+#settingsPanel{
+  position:fixed;
+  top:0;
+  right:-320px;
+  width:320px;
+  height:100%;
+  background:#111;
+  border-left:3px solid hotpink;
+  padding:15px;
+  transition:0.3s;
+  z-index:998;
+  overflow-y:auto;
+}
+#settingsPanel.open{right:0;}
+
+/* CONTAINER */
 .container{
   display:grid;
   grid-template-columns:25% 50% 25%;
@@ -47,92 +77,51 @@ body.y2k{color:white}
   border:3px solid hotpink;
   padding:12px;
   border-radius:10px;
+  transition:0.3s;
 }
 
 /* INPUTS */
 input,select,textarea,button{
   width:100%;
   margin-top:5px;
-  padding:8px;
+  padding:10px;
   border-radius:6px;
   font-size:16px;
-}
-input,textarea,select{
+  border:1px solid hotpink;
   background:black;
   color:#ff66cc;
-  border:1px solid hotpink;
 }
-button{
+button {
   background:#ff0099;
   color:white;
   border:none;
   cursor:pointer;
+  transition:0.2s;
 }
-button:hover{opacity:0.85}
+button:hover {
+  opacity:0.85;
+  box-shadow:0 0 10px hotpink;
+}
 
 /* TABLE */
-table{width:100%;border-collapse:collapse}
-th,td{border:1px solid hotpink;padding:6px;text-align:center}
+table {width:100%;border-collapse:collapse;}
+th,td{border:1px solid hotpink;padding:6px;text-align:center;}
+td input{width:90%;}
 
-/* GRAPH */
-#graph{height:18px;background:#333;margin-top:6px}
-#bar{height:100%;width:0%;background:hotpink}
+/* PROGRESS BAR */
+#graph{height:18px;background:#333;margin-top:6px;border-radius:6px;overflow:hidden;}
+#bar{height:100%;width:0%;background:hotpink;transition:width 0.5s;}
 
 /* COMMENTS */
-#comments{
-  height:120px;
-  overflow:auto;
-  background:black;
-  padding:6px;
-  border:1px solid hotpink;
-}
-
-/* SETTINGS */
-#settingsBtn{
-  position:fixed;
-  top:10px;
-  right:10px;
-  z-index:999;
-  padding:10px;
-}
-
-#settingsPanel{
-  position:fixed;
-  top:0;
-  right:-300px;
-  width:300px;
-  height:100%;
-  background:#111;
-  border-left:3px solid hotpink;
-  padding:15px;
-  transition:0.3s;
-  z-index:998;
-}
-#settingsPanel.open{right:0}
+#comments{height:120px;overflow:auto;background:black;padding:6px;border:1px solid hotpink;}
 
 /* BACKGROUND */
-#customBG{
+#customBG, #bgOverlay{
   position:fixed;
-  top:0;
-  left:0;
-  width:100%;
-  height:100%;
-  z-index:-2;
-  background-size:cover;
-  background-position:center;
+  top:0; left:0; width:100%; height:100%;
 }
-
-#bgOverlay{
-  position:fixed;
-  top:0;
-  left:0;
-  width:100%;
-  height:100%;
-  background:black;
-  opacity:0;
-  z-index:-1;
-  backdrop-filter:blur(0px);
-}
+#customBG{z-index:-2;background-size:cover;background-position:center;}
+#bgOverlay{z-index:-1;background:black;opacity:0;backdrop-filter:blur(0px);}
 
 /* POPUP */
 #goalPopup{
@@ -144,72 +133,34 @@ th,td{border:1px solid hotpink;padding:6px;text-align:center}
   padding:20px;
   display:none;
   color:white;
+  border-radius:12px;
+  font-size:18px;
+  z-index:1000;
 }
 
-/* iPHONE / MOBILE FRIENDLY */
+/* MOBILE STYLING */
 @media (max-width: 768px){
-  body { font-size: 14px; }
-
-  .container{
-    grid-template-columns:1fr !important;
-    gap:8px;
-    padding:8px;
-  }
-
-  .box{
-    font-size:14px;
-    padding:10px;
-    border-width:2px;
-  }
-
-  input, select, textarea, button{
-    font-size:16px;
-    padding:8px;
-  }
-
-  table, th, td{
-    font-size:12px;
-    padding:4px;
-  }
-
-  #settingsPanel{
-    width:260px !important;
-    right:-260px !important;
-  }
-
-  #settingsPanel.open{
-    right:0 !important;
-  }
-
-  #settingsBtn{
-    top:5px;
-    right:5px;
-    padding:10px;
-    font-size:16px;
-  }
-
-  #comments{
-    max-height:180px;
-  }
-
+  body{font-size:14px;}
+  .container{grid-template-columns:1fr !important;gap:10px;padding:10px;}
+  .box{font-size:14px;padding:10px;border-width:2px;}
+  table, th, td{font-size:12px;padding:4px;}
+  #settingsPanel{width:260px !important;right:-260px !important;}
+  #settingsBtn{top:5px;right:5px;padding:8px;font-size:16px;}
+  #comments{max-height:180px;}
   #graph{height:16px;}
-
-  .header{ font-size:18px; padding:8px; }
+  .header{font-size:18px;padding:8px;}
 }
 </style>
 </head>
-
 <body class="scene">
 
-<!-- SETTINGS -->
+<div class="header">MySpace Productivity ✨</div>
 <button id="settingsBtn">⚙️</button>
 
 <div id="settingsPanel">
   <h3>Customize</h3>
-
   <label>Background</label>
   <input type="file" id="bgUpload">
-
   <label>Background Fit</label>
   <select id="bgFit">
     <option value="fill">Fill</option>
@@ -219,13 +170,10 @@ th,td{border:1px solid hotpink;padding:6px;text-align:center}
     <option value="center">Center</option>
     <option value="span">Span</option>
   </select>
-
   <label>Dark Overlay</label>
   <input type="range" id="bgDark" min="0" max="0.8" step="0.05">
-
   <label>Blur</label>
   <input type="range" id="bgBlur" min="0" max="10">
-
   <h3>Column Widths</h3>
   <label>Left Column (%)</label>
   <input type="number" id="colLeft" min="10" max="50" value="25">
@@ -234,31 +182,28 @@ th,td{border:1px solid hotpink;padding:6px;text-align:center}
   <label>Right Column (%)</label>
   <input type="number" id="colRight" min="10" max="50" value="25">
   <button onclick="applyColWidths()">Apply Column Widths</button>
-
   <button onclick="resetBG()">Reset Background</button>
 </div>
-
-<div class="header">MySpace Productivity ✨</div>
 
 <div class="container">
 
 <div class="box">
 <h4>Theme</h4>
 <select id="themeSelect">
-<option value="scene">Scene</option>
-<option value="kawaii">Kawaii</option>
-<option value="pastel">Pastel</option>
-<option value="gothic">Gothic</option>
-<option value="emo">Emo</option>
-<option value="neon">Neon</option>
-<option value="y2k">Y2K</option>
+  <option value="scene">Scene</option>
+  <option value="kawaii">Kawaii</option>
+  <option value="pastel">Pastel</option>
+  <option value="gothic">Gothic</option>
+  <option value="emo">Emo</option>
+  <option value="neon">Neon</option>
+  <option value="y2k">Y2K</option>
 </select>
 </div>
 
 <div class="box">
 <h3>Production Time</h3>
 <table id="sheet">
-<tr><th>Start</th><th>End</th><th>Minutes</th></tr>
+<tr><th>Start</th><th>End</th><th>Minutes</th><th>Action</th></tr>
 </table>
 <button onclick="addRow()">+ Add Row</button>
 <button onclick="clearRows()">Clear</button>
@@ -277,7 +222,7 @@ th,td{border:1px solid hotpink;padding:6px;text-align:center}
 <div class="box">
 <h3>Comment Wall</h3>
 <div id="comments"></div>
-<input id="commentInput">
+<input id="commentInput" placeholder="Write a comment...">
 <button onclick="postComment()">Post</button>
 </div>
 </div>
@@ -287,26 +232,25 @@ th,td{border:1px solid hotpink;padding:6px;text-align:center}
 <div id="goalPopup">✨ Goal Reached! ✨</div>
 
 <script>
-const sheet=document.getElementById("sheet")
-settingsBtn.onclick = ()=>settingsPanel.classList.toggle("open")
+const settingsBtn=document.getElementById("settingsBtn");
+const settingsPanel=document.getElementById("settingsPanel");
+settingsBtn.onclick=()=>settingsPanel.classList.toggle("open");
 
-/* BACKGROUND */
-const bg=document.createElement("div"); bg.id="customBG"; document.body.appendChild(bg)
-const overlay=document.createElement("div"); overlay.id="bgOverlay"; document.body.appendChild(overlay)
-if(localStorage.bgImage) bg.style.backgroundImage=`url(${localStorage.bgImage})`
-if(localStorage.bgFit) applyBgFit(localStorage.bgFit)
-if(localStorage.bgDark) overlay.style.opacity=localStorage.bgDark
-if(localStorage.bgBlur) overlay.style.backdropFilter=`blur(${localStorage.bgBlur}px)`
+// BACKGROUND
+const bg=document.createElement("div"); bg.id="customBG"; document.body.appendChild(bg);
+const overlay=document.createElement("div"); overlay.id="bgOverlay"; document.body.appendChild(overlay);
+if(localStorage.bgImage) bg.style.backgroundImage=`url(${localStorage.bgImage})`;
+if(localStorage.bgFit) applyBgFit(localStorage.bgFit);
+if(localStorage.bgDark) overlay.style.opacity=localStorage.bgDark;
+if(localStorage.bgBlur) overlay.style.backdropFilter=`blur(${localStorage.bgBlur}px)`;
 
 bgUpload.onchange=e=>{
-  let r=new FileReader()
-  r.onload=()=>{bg.style.backgroundImage=`url(${r.result})`; localStorage.bgImage=r.result}
-  r.readAsDataURL(e.target.files[0])
-}
-
-bgFit.value=localStorage.bgFit||"fill"
-bgFit.onchange=()=>{applyBgFit(bgFit.value); localStorage.bgFit=bgFit.value}
-
+  let r=new FileReader();
+  r.onload=()=>{bg.style.backgroundImage=`url(${r.result})`; localStorage.bgImage=r.result;}
+  r.readAsDataURL(e.target.files[0]);
+};
+bgFit.value=localStorage.bgFit||"fill";
+bgFit.onchange=()=>{applyBgFit(bgFit.value); localStorage.bgFit=bgFit.value;}
 function applyBgFit(value){
   switch(value){
     case "fill": bg.style.backgroundSize="cover"; bg.style.backgroundRepeat="no-repeat"; bg.style.backgroundPosition="center"; break;
@@ -317,119 +261,113 @@ function applyBgFit(value){
     case "span": bg.style.backgroundSize="cover"; bg.style.backgroundRepeat="no-repeat"; bg.style.backgroundPosition="center"; break;
   }
 }
+bgDark.oninput=()=>{overlay.style.opacity=bgDark.value; localStorage.bgDark=bgDark.value;}
+bgBlur.oninput=()=>{overlay.style.backdropFilter=`blur(${bgBlur.value}px)`; localStorage.bgBlur=bgBlur.value;}
+function resetBG(){localStorage.removeItem("bgImage"); localStorage.removeItem("bgFit"); localStorage.removeItem("bgDark"); localStorage.removeItem("bgBlur"); location.reload();}
 
-bgDark.oninput=()=>{overlay.style.opacity=bgDark.value; localStorage.bgDark=bgDark.value}
-bgBlur.oninput=()=>{overlay.style.backdropFilter=`blur(${bgBlur.value}px)`; localStorage.bgBlur=bgBlur.value}
-
-function resetBG(){localStorage.removeItem("bgImage"); localStorage.removeItem("bgFit"); localStorage.removeItem("bgDark"); localStorage.removeItem("bgBlur"); location.reload()}
-
-/* COLUMN WIDTHS */
+// COLUMN WIDTHS
 function applyColWidths(){
-  let l=Number(colLeft.value), c=Number(colCenter.value), r=Number(colRight.value)
-  let total=l+c+r
-  if(total>100){ l=Math.round((l/total)*100); c=Math.round((c/total)*100); r=100-l-c }
-  document.querySelector(".container").style.gridTemplateColumns=`${l}% ${c}% ${r}%`
-  localStorage.colLeft=l; localStorage.colCenter=c; localStorage.colRight=r
+  let l=Number(colLeft.value), c=Number(colCenter.value), r=Number(colRight.value);
+  let total=l+c+r;
+  if(total>100){ l=Math.round((l/total)*100); c=Math.round((c/total)*100); r=100-l-c; }
+  document.querySelector(".container").style.gridTemplateColumns=`${l}% ${c}% ${r}%`;
+  localStorage.colLeft=l; localStorage.colCenter=c; localStorage.colRight=r;
 }
-if(localStorage.colLeft) colLeft.value=localStorage.colLeft
-if(localStorage.colCenter) colCenter.value=localStorage.colCenter
-if(localStorage.colRight) colRight.value=localStorage.colRight
-applyColWidths()
+if(localStorage.colLeft) colLeft.value=localStorage.colLeft;
+if(localStorage.colCenter) colCenter.value=localStorage.colCenter;
+if(localStorage.colRight) colRight.value=localStorage.colRight;
+applyColWidths();
 
-/* THEME */
-themeSelect.value=localStorage.theme||"scene"
-document.body.className=themeSelect.value
-themeSelect.onchange=()=>{document.body.className=themeSelect.value; localStorage.theme=themeSelect.value}
+// THEME
+themeSelect.value=localStorage.theme||"scene";
+document.body.className=themeSelect.value;
+themeSelect.onchange=()=>{document.body.className=themeSelect.value; localStorage.theme=themeSelect.value;}
 
-/* NOTES */
-notes.value=localStorage.notes||""
-notes.oninput=()=>localStorage.notes=notes.value
+// NOTES
+notes.value=localStorage.notes||"";
+notes.oninput=()=>localStorage.notes=notes.value;
 
-/* ROWS */
+// ROWS
 function addRow(data={}){
-  let row=sheet.insertRow()
-  let start=document.createElement("input"), end=document.createElement("input"), mins=document.createElement("input")
-  start.type="time"; end.type="time"; mins.type="number"
+  const row=sheet.insertRow();
+  const start=document.createElement("input"), end=document.createElement("input"), mins=document.createElement("input"), delBtn=document.createElement("button");
+  start.type="time"; end.type="time"; mins.type="number"; mins.readOnly=true;
+  delBtn.textContent="❌"; delBtn.onclick=()=>{row.remove(); saveRows(); updateTotal();};
 
-  let rows=document.querySelectorAll("#sheet tr")
-  if(rows.length>1){
-    let lastRow=rows[rows.length-2]
-    let lastEnd=lastRow.cells[1].querySelector("input")
-    if(lastEnd && lastEnd.value && !data.start) start.value=lastEnd.value
+  if(sheet.rows.length>1){
+    const lastEnd=sheet.rows[sheet.rows.length-1].cells[1].querySelector("input");
+    if(lastEnd && lastEnd.value && !data.start) start.value=lastEnd.value;
   }
+  start.value=data.start||""; end.value=data.end||""; mins.value=data.mins||"";
 
-  start.value=data.start||start.value||""
-  end.value=data.end||""
-  mins.value=data.mins||""
-
-  row.insertCell(0).appendChild(start)
-  row.insertCell(1).appendChild(end)
-  row.insertCell(2).appendChild(mins)
+  row.insertCell(0).appendChild(start);
+  row.insertCell(1).appendChild(end);
+  row.insertCell(2).appendChild(mins);
+  row.insertCell(3).appendChild(delBtn);
 
   function calc(){
-    if(!start.value||!end.value) return
-    let s=new Date("1970-01-01T"+start.value)
-    let e=new Date("1970-01-01T"+end.value)
-    let diff=(e-s)/60000
-    if(diff>=0) mins.value=diff
-    saveRows(); updateTotal()
-    if(row===sheet.rows[sheet.rows.length-1] && end.value) addRow()
+    if(!start.value||!end.value) return;
+    const s=new Date("1970-01-01T"+start.value), e=new Date("1970-01-01T"+end.value);
+    let diff=(e-s)/60000;
+    if(diff<0) diff=0;
+    mins.value=Math.round(diff);
+    saveRows(); updateTotal();
+    if(row===sheet.rows[sheet.rows.length-1] && end.value) addRow();
   }
-  start.onchange=start.onblur=end.onchange=end.onblur=calc
-  mins.oninput=()=>{saveRows(); updateTotal()}
+  start.onchange=start.onblur=end.onchange=end.onblur=calc;
 }
 
 function saveRows(){
-  let data=[]
+  let data=[];
   document.querySelectorAll("#sheet tr").forEach((r,i)=>{
-    if(i===0) return
-    let inputs=r.querySelectorAll("input")
-    data.push({start:inputs[0].value,end:inputs[1].value,mins:inputs[2].value})
-  })
-  localStorage.rows=JSON.stringify(data)
+    if(i===0) return;
+    const inputs=r.querySelectorAll("input");
+    data.push({start:inputs[0].value,end:inputs[1].value,mins:inputs[2].value});
+  });
+  localStorage.rows=JSON.stringify(data);
 }
 
 function loadRows(){
-  let data=JSON.parse(localStorage.rows||"[]")
-  if(data.length===0) addRow()
-  else data.forEach(d=>addRow(d))
-  addRow()
-  updateTotal()
+  const data=JSON.parse(localStorage.rows||"[]");
+  if(data.length===0) addRow();
+  else data.forEach(d=>addRow(d));
+  addRow();
+  updateTotal();
 }
 
-function clearRows(){localStorage.removeItem("rows"); location.reload()}
+function clearRows(){localStorage.removeItem("rows"); location.reload();}
 
 function updateTotal(){
-  let total=0
+  let total=0;
   document.querySelectorAll("#sheet tr").forEach((r,i)=>{
-    if(i===0) return
-    let v=r.cells[2].firstChild.value
-    if(v) total+=Number(v)
-  })
-  let h=Math.floor(total/60), m=total%60
-  timeDisplay.innerText=total?`${total} min (${h}h ${m}m)`:""
-  bar.style.width=Math.min((total/480)*100,100)+"%"
-  if(total>=480){goalPopup.style.display="block"; setTimeout(()=>goalPopup.style.display="none",3000)}
+    if(i===0) return;
+    const v=r.cells[2].firstChild.value;
+    if(v) total+=Number(v);
+  });
+  const h=Math.floor(total/60), m=total%60;
+  timeDisplay.innerText=total?`${total} min (${h}h ${m}m)`:"";
+  bar.style.width=Math.min((total/480)*100,100)+"%";
+  if(total>=480){goalPopup.style.display="block"; setTimeout(()=>goalPopup.style.display="none",3000);}
 }
 
-/* COMMENTS */
+// COMMENTS
 function postComment(){
-  if(!commentInput.value.trim()) return
-  let d=document.createElement("div")
-  d.textContent=commentInput.value
-  comments.appendChild(d)
-  let saved=JSON.parse(localStorage.comments||"[]")
-  saved.push(commentInput.value)
-  localStorage.comments=JSON.stringify(saved)
-  commentInput.value=""
+  if(!commentInput.value.trim()) return;
+  const d=document.createElement("div");
+  const now=new Date(); d.textContent=`[${now.getHours()}:${now.getMinutes().toString().padStart(2,"0")}] ${commentInput.value}`;
+  comments.appendChild(d);
+  const saved=JSON.parse(localStorage.comments||"[]");
+  saved.push(d.textContent);
+  localStorage.comments=JSON.stringify(saved);
+  commentInput.value="";
 }
 function loadComments(){
-  let saved=JSON.parse(localStorage.comments||"[]")
-  saved.forEach(c=>{ let d=document.createElement("div"); d.textContent=c; comments.appendChild(d) })
+  const saved=JSON.parse(localStorage.comments||"[]");
+  saved.forEach(c=>{ const d=document.createElement("div"); d.textContent=c; comments.appendChild(d); });
 }
 
-loadRows()
-loadComments()
+loadRows();
+loadComments();
 </script>
 </body>
 </html>
