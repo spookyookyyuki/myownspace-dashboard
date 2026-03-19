@@ -2,65 +2,46 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>MySpace Productivity 2.0</title>
+<title>MySpace Productivity</title>
 <style>
-body {
+/* ---------- BASE ---------- */
+body{
   margin:0;
   font-family:"Comic Sans MS",cursive;
   background:#111;
   color:#ff66cc;
-  transition: background 0.3s, color 0.3s;
 }
 
 /* THEMES */
-body.scene {color:#ff00aa;}
-body.kawaii {color:#ff1493;}
-body.pastel {color:#9966ff;}
-body.gothic {color:#ff66cc;}
-body.emo {color:red;font-family:"Courier New";}
-body.neon {color:#39ff14;text-shadow:0 0 6px #39ff14;}
-body.y2k {color:white;}
+body.scene{color:#ff00aa}
+body.kawaii{color:#ff1493}
+body.pastel{color:#9966ff}
+body.gothic{color:#ff66cc}
+body.emo{color:red;font-family:"Courier New"}
+body.neon{color:#39ff14;text-shadow:0 0 6px #39ff14}
+body.y2k{color:white}
+
+/* COMPACT UI */
+body.compact{font-size:13px}
+.container.compact{gap:8px;padding:8px}
+.box.compact{padding:8px;border-width:2px}
+input.compact, select.compact, textarea.compact, button.compact{padding:6px;font-size:14px}
+table.compact th, table.compact td{padding:4px;font-size:12px}
+#graph.compact{height:14px}
+#settingsBtn.compact{padding:6px;font-size:14px}
+.header.compact{font-size:16px;padding:6px}
+#comments.compact{max-height:140px}
 
 /* HEADER */
 .header{
-  position:sticky;
-  top:0;
   background:#ff0099;
   padding:12px;
   text-align:center;
   font-size:22px;
   color:white;
-  z-index:100;
 }
 
-/* SETTINGS BUTTON */
-#settingsBtn {
-  position:fixed;
-  top:10px;
-  right:10px;
-  z-index:999;
-  padding:10px;
-  font-size:18px;
-  cursor:pointer;
-}
-
-/* SETTINGS PANEL */
-#settingsPanel{
-  position:fixed;
-  top:0;
-  right:-320px;
-  width:320px;
-  height:100%;
-  background:#111;
-  border-left:3px solid hotpink;
-  padding:15px;
-  transition:0.3s;
-  z-index:998;
-  overflow-y:auto;
-}
-#settingsPanel.open{right:0;}
-
-/* CONTAINER */
+/* LAYOUT */
 .container{
   display:grid;
   grid-template-columns:25% 50% 25%;
@@ -77,51 +58,92 @@ body.y2k {color:white;}
   border:3px solid hotpink;
   padding:12px;
   border-radius:10px;
-  transition:0.3s;
 }
 
 /* INPUTS */
 input,select,textarea,button{
   width:100%;
   margin-top:5px;
-  padding:10px;
+  padding:8px;
   border-radius:6px;
   font-size:16px;
-  border:1px solid hotpink;
+}
+input,textarea,select{
   background:black;
   color:#ff66cc;
+  border:1px solid hotpink;
 }
-button {
+button{
   background:#ff0099;
   color:white;
   border:none;
   cursor:pointer;
-  transition:0.2s;
 }
-button:hover {
-  opacity:0.85;
-  box-shadow:0 0 10px hotpink;
-}
+button:hover{opacity:0.85}
 
 /* TABLE */
-table {width:100%;border-collapse:collapse;}
-th,td{border:1px solid hotpink;padding:6px;text-align:center;}
-td input{width:90%;}
+table{width:100%;border-collapse:collapse}
+th,td{border:1px solid hotpink;padding:6px;text-align:center}
 
-/* PROGRESS BAR */
-#graph{height:18px;background:#333;margin-top:6px;border-radius:6px;overflow:hidden;}
-#bar{height:100%;width:0%;background:hotpink;transition:width 0.5s;}
+/* GRAPH */
+#graph{height:18px;background:#333;margin-top:6px}
+#bar{height:100%;width:0%;background:hotpink;transition:width 0.5s;border-radius:8px}
 
 /* COMMENTS */
-#comments{height:120px;overflow:auto;background:black;padding:6px;border:1px solid hotpink;}
+#comments{
+  height:120px;
+  overflow:auto;
+  background:black;
+  padding:6px;
+  border:1px solid hotpink;
+}
+
+/* SETTINGS */
+#settingsBtn{
+  position:fixed;
+  top:10px;
+  right:10px;
+  z-index:999;
+  padding:10px;
+}
+
+#settingsPanel{
+  position:fixed;
+  top:0;
+  right:-300px;
+  width:300px;
+  height:100%;
+  background:#111;
+  border-left:3px solid hotpink;
+  padding:15px;
+  transition:0.3s;
+  z-index:998;
+}
+#settingsPanel.open{right:0}
 
 /* BACKGROUND */
-#customBG, #bgOverlay{
+#customBG{
   position:fixed;
-  top:0; left:0; width:100%; height:100%;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  z-index:-2;
+  background-size:cover;
+  background-position:center;
 }
-#customBG{z-index:-2;background-size:cover;background-position:center;}
-#bgOverlay{z-index:-1;background:black;opacity:0;backdrop-filter:blur(0px);}
+
+#bgOverlay{
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background:black;
+  opacity:0;
+  z-index:-1;
+  backdrop-filter:blur(0px);
+}
 
 /* POPUP */
 #goalPopup{
@@ -133,28 +155,36 @@ td input{width:90%;}
   padding:20px;
   display:none;
   color:white;
-  border-radius:12px;
-  font-size:18px;
-  z-index:1000;
 }
 
-/* MOBILE STYLING */
+/* NEON PULSE ANIMATION */
+@keyframes neonPulse{
+  0%{box-shadow:0 0 8px currentColor;}
+  50%{box-shadow:0 0 20px currentColor;}
+  100%{box-shadow:0 0 8px currentColor;}
+}
+#bar.pulse,#goalPopup.pulse{animation:neonPulse 1s infinite alternate;border-radius:8px}
+
+/* MOBILE FRIENDLY */
 @media (max-width: 768px){
-  body{font-size:14px;}
-  .container{grid-template-columns:1fr !important;gap:10px;padding:10px;}
+  body { font-size: 14px; }
+  .container{grid-template-columns:1fr !important; gap:8px; padding:8px;}
   .box{font-size:14px;padding:10px;border-width:2px;}
+  input, select, textarea, button{font-size:16px;padding:8px;}
   table, th, td{font-size:12px;padding:4px;}
-  #settingsPanel{width:260px !important;right:-260px !important;}
-  #settingsBtn{top:5px;right:5px;padding:8px;font-size:16px;}
+  #settingsPanel{width:260px !important; right:-260px !important;}
+  #settingsPanel.open{right:0 !important;}
+  #settingsBtn{top:5px; right:5px; padding:10px; font-size:16px;}
   #comments{max-height:180px;}
   #graph{height:16px;}
-  .header{font-size:18px;padding:8px;}
+  .header{ font-size:18px; padding:8px; }
 }
 </style>
 </head>
-<body class="scene">
 
-<div class="header">MySpace Productivity ✨</div>
+<body class="scene compact">
+
+<!-- SETTINGS -->
 <button id="settingsBtn">⚙️</button>
 
 <div id="settingsPanel">
@@ -185,55 +215,71 @@ td input{width:90%;}
   <button onclick="resetBG()">Reset Background</button>
 </div>
 
-<div class="container">
+<div class="header">MySpace Productivity ✨</div>
 
-<div class="box">
-<h4>Theme</h4>
-<select id="themeSelect">
-  <option value="scene">Scene</option>
-  <option value="kawaii">Kawaii</option>
-  <option value="pastel">Pastel</option>
-  <option value="gothic">Gothic</option>
-  <option value="emo">Emo</option>
-  <option value="neon">Neon</option>
-  <option value="y2k">Y2K</option>
-</select>
-</div>
+<div class="container compact">
+  <div class="box compact">
+    <h4>Theme</h4>
+    <select id="themeSelect">
+      <option value="scene">Scene</option>
+      <option value="kawaii">Kawaii</option>
+      <option value="pastel">Pastel</option>
+      <option value="gothic">Gothic</option>
+      <option value="emo">Emo</option>
+      <option value="neon">Neon</option>
+      <option value="y2k">Y2K</option>
+    </select>
+  </div>
 
-<div class="box">
-<h3>Production Time</h3>
-<table id="sheet">
-<tr><th>Start</th><th>End</th><th>Minutes</th><th>Action</th></tr>
-</table>
-<button onclick="addRow()">+ Add Row</button>
-<button onclick="clearRows()">Clear</button>
-<div id="timeDisplay"></div>
-<div id="graph"><div id="bar"></div></div>
-</div>
+  <div class="box compact">
+    <h3>Production Time</h3>
+    <table id="sheet" class="compact">
+      <tr><th>Start</th><th>End</th><th>Minutes</th><th>Del</th></tr>
+    </table>
+    <button onclick="addRow()">+ Add Row</button>
+    <button onclick="clearRows()">Clear</button>
+    <div id="timeDisplay"></div>
+    <div id="graph" class="compact"><div id="bar"></div></div>
+  </div>
 
-<div>
-<div class="box">
-<h3>Notes</h3>
-<textarea id="notes"></textarea>
-</div>
-
-<br>
-
-<div class="box">
-<h3>Comment Wall</h3>
-<div id="comments"></div>
-<input id="commentInput" placeholder="Write a comment...">
-<button onclick="postComment()">Post</button>
-</div>
-</div>
-
+  <div>
+    <div class="box compact">
+      <h3>Notes</h3>
+      <textarea id="notes"></textarea>
+    </div>
+    <br>
+    <div class="box compact">
+      <h3>Comment Wall</h3>
+      <div id="comments"></div>
+      <input id="commentInput">
+      <button onclick="postComment()">Post</button>
+    </div>
+  </div>
 </div>
 
 <div id="goalPopup">✨ Goal Reached! ✨</div>
 
 <script>
+window.onload=function(){
 const settingsBtn=document.getElementById("settingsBtn");
 const settingsPanel=document.getElementById("settingsPanel");
+const bgUpload=document.getElementById("bgUpload");
+const bgFit=document.getElementById("bgFit");
+const bgDark=document.getElementById("bgDark");
+const bgBlur=document.getElementById("bgBlur");
+const colLeft=document.getElementById("colLeft");
+const colCenter=document.getElementById("colCenter");
+const colRight=document.getElementById("colRight");
+const themeSelect=document.getElementById("themeSelect");
+const notes=document.getElementById("notes");
+const sheet=document.getElementById("sheet");
+const timeDisplay=document.getElementById("timeDisplay");
+const bar=document.getElementById("bar");
+const goalPopup=document.getElementById("goalPopup");
+const commentInput=document.getElementById("commentInput");
+const comments=document.getElementById("comments");
+
+// SETTINGS PANEL TOGGLE
 settingsBtn.onclick=()=>settingsPanel.classList.toggle("open");
 
 // BACKGROUND
@@ -243,131 +289,69 @@ if(localStorage.bgImage) bg.style.backgroundImage=`url(${localStorage.bgImage})`
 if(localStorage.bgFit) applyBgFit(localStorage.bgFit);
 if(localStorage.bgDark) overlay.style.opacity=localStorage.bgDark;
 if(localStorage.bgBlur) overlay.style.backdropFilter=`blur(${localStorage.bgBlur}px)`;
-
-bgUpload.onchange=e=>{
-  let r=new FileReader();
-  r.onload=()=>{bg.style.backgroundImage=`url(${r.result})`; localStorage.bgImage=r.result;}
-  r.readAsDataURL(e.target.files[0]);
-};
+bgUpload.onchange=e=>{let r=new FileReader();r.onload=()=>{bg.style.backgroundImage=`url(${r.result})`;localStorage.bgImage=r.result};r.readAsDataURL(e.target.files[0]);}
 bgFit.value=localStorage.bgFit||"fill";
-bgFit.onchange=()=>{applyBgFit(bgFit.value); localStorage.bgFit=bgFit.value;}
-function applyBgFit(value){
-  switch(value){
-    case "fill": bg.style.backgroundSize="cover"; bg.style.backgroundRepeat="no-repeat"; bg.style.backgroundPosition="center"; break;
-    case "fit": bg.style.backgroundSize="contain"; bg.style.backgroundRepeat="no-repeat"; bg.style.backgroundPosition="center"; break;
-    case "stretch": bg.style.backgroundSize="100% 100%"; bg.style.backgroundRepeat="no-repeat"; bg.style.backgroundPosition="center"; break;
-    case "tile": bg.style.backgroundSize="auto"; bg.style.backgroundRepeat="repeat"; bg.style.backgroundPosition="top left"; break;
-    case "center": bg.style.backgroundSize="auto"; bg.style.backgroundRepeat="no-repeat"; bg.style.backgroundPosition="center"; break;
-    case "span": bg.style.backgroundSize="cover"; bg.style.backgroundRepeat="no-repeat"; bg.style.backgroundPosition="center"; break;
-  }
-}
-bgDark.oninput=()=>{overlay.style.opacity=bgDark.value; localStorage.bgDark=bgDark.value;}
-bgBlur.oninput=()=>{overlay.style.backdropFilter=`blur(${bgBlur.value}px)`; localStorage.bgBlur=bgBlur.value;}
-function resetBG(){localStorage.removeItem("bgImage"); localStorage.removeItem("bgFit"); localStorage.removeItem("bgDark"); localStorage.removeItem("bgBlur"); location.reload();}
+bgFit.onchange=()=>{applyBgFit(bgFit.value);localStorage.bgFit=bgFit.value;}
+function applyBgFit(v){switch(v){case"fill":bg.style.backgroundSize="cover";bg.style.backgroundRepeat="no-repeat";bg.style.backgroundPosition="center";break;case"fit":bg.style.backgroundSize="contain";bg.style.backgroundRepeat="no-repeat";bg.style.backgroundPosition="center";break;case"stretch":bg.style.backgroundSize="100% 100%";bg.style.backgroundRepeat="no-repeat";bg.style.backgroundPosition="center";break;case"tile":bg.style.backgroundSize="auto";bg.style.backgroundRepeat="repeat";bg.style.backgroundPosition="top left";break;case"center":bg.style.backgroundSize="auto";bg.style.backgroundRepeat="no-repeat";bg.style.backgroundPosition="center";break;case"span":bg.style.backgroundSize="cover";bg.style.backgroundRepeat="no-repeat";bg.style.backgroundPosition="center";break;}}
+bgDark.oninput=()=>{overlay.style.opacity=bgDark.value;localStorage.bgDark=bgDark.value;}
+bgBlur.oninput=()=>{overlay.style.backdropFilter=`blur(${bgBlur.value}px)`;localStorage.bgBlur=bgBlur.value;}
+function resetBG(){localStorage.removeItem("bgImage");localStorage.removeItem("bgFit");localStorage.removeItem("bgDark");localStorage.removeItem("bgBlur");location.reload();}
 
 // COLUMN WIDTHS
-function applyColWidths(){
-  let l=Number(colLeft.value), c=Number(colCenter.value), r=Number(colRight.value);
-  let total=l+c+r;
-  if(total>100){ l=Math.round((l/total)*100); c=Math.round((c/total)*100); r=100-l-c; }
-  document.querySelector(".container").style.gridTemplateColumns=`${l}% ${c}% ${r}%`;
-  localStorage.colLeft=l; localStorage.colCenter=c; localStorage.colRight=r;
-}
+function applyColWidths(){let l=Number(colLeft.value),c=Number(colCenter.value),r=Number(colRight.value),t=l+c+r;if(t>100){l=Math.round(l/t*100);c=Math.round(c/t*100);r=100-l-c;}document.querySelector(".container").style.gridTemplateColumns=`${l}% ${c}% ${r}%`;localStorage.colLeft=l;localStorage.colCenter=c;localStorage.colRight=r;}
 if(localStorage.colLeft) colLeft.value=localStorage.colLeft;
 if(localStorage.colCenter) colCenter.value=localStorage.colCenter;
 if(localStorage.colRight) colRight.value=localStorage.colRight;
 applyColWidths();
 
-// THEME
+// THEME & COMPACT
+const themeColors={scene:"#ff00aa",kawaii:"#ff1493",pastel:"#9966ff",gothic:"#ff66cc",emo:"red",neon:"#39ff14",y2k:"white"};
 themeSelect.value=localStorage.theme||"scene";
-document.body.className=themeSelect.value;
-themeSelect.onchange=()=>{document.body.className=themeSelect.value; localStorage.theme=themeSelect.value;}
+document.body.className=themeSelect.value+" compact";
+themeSelect.onchange=()=>{document.body.className=themeSelect.value+" compact";localStorage.theme=themeSelect.value;updateTotal();}
 
 // NOTES
 notes.value=localStorage.notes||"";
 notes.oninput=()=>localStorage.notes=notes.value;
 
 // ROWS
-function addRow(data={}){
-  const row=sheet.insertRow();
-  const start=document.createElement("input"), end=document.createElement("input"), mins=document.createElement("input"), delBtn=document.createElement("button");
-  start.type="time"; end.type="time"; mins.type="number"; mins.readOnly=true;
-  delBtn.textContent="❌"; delBtn.onclick=()=>{row.remove(); saveRows(); updateTotal();};
-
-  if(sheet.rows.length>1){
-    const lastEnd=sheet.rows[sheet.rows.length-1].cells[1].querySelector("input");
-    if(lastEnd && lastEnd.value && !data.start) start.value=lastEnd.value;
-  }
-  start.value=data.start||""; end.value=data.end||""; mins.value=data.mins||"";
-
-  row.insertCell(0).appendChild(start);
-  row.insertCell(1).appendChild(end);
-  row.insertCell(2).appendChild(mins);
-  row.insertCell(3).appendChild(delBtn);
-
-  function calc(){
-    if(!start.value||!end.value) return;
-    const s=new Date("1970-01-01T"+start.value), e=new Date("1970-01-01T"+end.value);
-    let diff=(e-s)/60000;
-    if(diff<0) diff=0;
-    mins.value=Math.round(diff);
-    saveRows(); updateTotal();
-    if(row===sheet.rows[sheet.rows.length-1] && end.value) addRow();
-  }
-  start.onchange=start.onblur=end.onchange=end.onblur=calc;
-}
-
-function saveRows(){
-  let data=[];
-  document.querySelectorAll("#sheet tr").forEach((r,i)=>{
-    if(i===0) return;
-    const inputs=r.querySelectorAll("input");
-    data.push({start:inputs[0].value,end:inputs[1].value,mins:inputs[2].value});
-  });
-  localStorage.rows=JSON.stringify(data);
-}
-
-function loadRows(){
-  const data=JSON.parse(localStorage.rows||"[]");
-  if(data.length===0) addRow();
-  else data.forEach(d=>addRow(d));
-  addRow();
-  updateTotal();
-}
-
-function clearRows(){localStorage.removeItem("rows"); location.reload();}
-
-function updateTotal(){
-  let total=0;
-  document.querySelectorAll("#sheet tr").forEach((r,i)=>{
-    if(i===0) return;
-    const v=r.cells[2].firstChild.value;
-    if(v) total+=Number(v);
-  });
-  const h=Math.floor(total/60), m=total%60;
-  timeDisplay.innerText=total?`${total} min (${h}h ${m}m)`:"";
-  bar.style.width=Math.min((total/480)*100,100)+"%";
-  if(total>=480){goalPopup.style.display="block"; setTimeout(()=>goalPopup.style.display="none",3000);}
-}
+function addRow(d={}){const row=sheet.insertRow();const start=document.createElement("input"),end=document.createElement("input"),mins=document.createElement("input"),del=document.createElement("button");start.type="time";end.type="time";mins.type="number";mins.readOnly=true;del.textContent="❌";del.onclick=()=>{row.remove();saveRows();updateTotal();};if(sheet.rows.length>1){const le=sheet.rows[sheet.rows.length-1].cells[1].querySelector("input");if(le&&le.value&&!d.start)start.value=le.value;}start.value=d.start||"";end.value=d.end||"";mins.value=d.mins||"";row.insertCell(0).appendChild(start);row.insertCell(1).appendChild(end);row.insertCell(2).appendChild(mins);row.insertCell(3).appendChild(del);function calc(){if(!start.value||!end.value)return;let s=new Date("1970-01-01T"+start.value),e=new Date("1970-01-01T"+end.value);let diff=(e-s)/60000;if(diff<0)diff=0;mins.value=Math.round(diff);saveRows();updateTotal();if(row===sheet.rows[sheet.rows.length-1]&&end.value)addRow();}start.onchange=start.onblur=end.onchange=end.onblur=calc;}
+function saveRows(){let data=[];document.querySelectorAll("#sheet tr").forEach((r,i)=>{if(i===0)return;const inputs=r.querySelectorAll("input");data.push({start:inputs[0].value,end:inputs[1].value,mins:inputs[2].value});});localStorage.rows=JSON.stringify(data);}
+function loadRows(){let data=JSON.parse(localStorage.rows||"[]");if(data.length===0)addRow();else data.forEach(d=>addRow(d));addRow();updateTotal();}
+function clearRows(){localStorage.removeItem("rows");location.reload();}
 
 // COMMENTS
-function postComment(){
-  if(!commentInput.value.trim()) return;
-  const d=document.createElement("div");
-  const now=new Date(); d.textContent=`[${now.getHours()}:${now.getMinutes().toString().padStart(2,"0")}] ${commentInput.value}`;
-  comments.appendChild(d);
-  const saved=JSON.parse(localStorage.comments||"[]");
-  saved.push(d.textContent);
-  localStorage.comments=JSON.stringify(saved);
-  commentInput.value="";
-}
-function loadComments(){
-  const saved=JSON.parse(localStorage.comments||"[]");
-  saved.forEach(c=>{ const d=document.createElement("div"); d.textContent=c; comments.appendChild(d); });
+function postComment(){if(!commentInput.value.trim())return;const d=document.createElement("div");const now=new Date();d.textContent=`[${now.getHours()}:${now.getMinutes().toString().padStart(2,"0")}] ${commentInput.value}`;comments.appendChild(d);let saved=JSON.parse(localStorage.comments||"[]");saved.push(d.textContent);localStorage.comments=JSON.stringify(saved);commentInput.value="";}
+function loadComments(){let saved=JSON.parse(localStorage.comments||"[]");saved.forEach(c=>{const d=document.createElement("div");d.textContent=c;comments.appendChild(d);});}
+
+// UPDATE TOTAL + NEON GLOW
+function updateTotal(){
+  let total=0;
+  document.querySelectorAll("#sheet tr").forEach((r,i)=>{if(i===0)return;const v=r.cells[2].firstChild.value;if(v)total+=Number(v);});
+  const h=Math.floor(total/60),m=total%60;
+  timeDisplay.innerText=total?`${total} min (${h}h ${m}m)`:"";
+  const pct=Math.min(total/480,1)*100;
+  bar.style.width=pct+"%";
+  
+  const color=themeColors[themeSelect.value]||"hotpink";
+  bar.style.color=color;
+  goalPopup.style.color=color;
+
+  if(total>0 && total<480){ // gradual glow scaling
+    const glow=Math.max(8,pct/5+8);
+    bar.style.boxShadow=`0 0 ${glow}px ${color}`;
+    goalPopup.style.boxShadow=`0 0 ${glow}px ${color}`;
+  }
+
+  if(total>=384&&total<480){bar.classList.add("pulse");goalPopup.classList.add("pulse");}
+  else{bar.classList.remove("pulse");goalPopup.classList.remove("pulse");}
+
+  if(total>=480){goalPopup.style.display="block";setTimeout(()=>goalPopup.style.display="none",3000);}
 }
 
 loadRows();
 loadComments();
+}
 </script>
 </body>
 </html>
