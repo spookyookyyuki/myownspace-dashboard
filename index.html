@@ -3,17 +3,52 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CHAOS MYSPACE ✨</title>
+<title>CHAOS MYSPACE EVOLVED ✨</title>
 
 <style>
+:root{
+  --bg1:#ff00cc;
+  --bg2:#3333ff;
+  --bg3:#00ffee;
+  --accent:hotpink;
+  --box:rgba(0,0,0,0.85);
+  --text:white;
+}
+
 body{
   margin:0;
   font-family:"Comic Sans MS",cursive;
-  overflow-x:hidden;
-  background:linear-gradient(270deg,#ff00cc,#3333ff,#00ffee);
+  color:var(--text);
+  background:linear-gradient(270deg,var(--bg1),var(--bg2),var(--bg3));
   background-size:600% 600%;
-  animation:bgMove 8s infinite alternate;
-  color:white;
+  animation:bgMove 10s infinite alternate;
+}
+
+/* THEMES */
+body.emo{
+  --bg1:#000;
+  --bg2:#111;
+  --bg3:#222;
+  --accent:red;
+}
+body.scene{
+  --bg1:#ff00cc;
+  --bg2:#00ff99;
+  --bg3:#ffff00;
+  --accent:lime;
+}
+body.glitch{
+  --bg1:#000;
+  --bg2:#0ff;
+  --bg3:#f0f;
+  --accent:#0ff;
+  text-shadow:1px 0 red,-1px 0 blue;
+}
+body.glitter{
+  --bg1:#ff9cfb;
+  --bg2:#ffd6f9;
+  --bg3:#fff;
+  --accent:#ff66cc;
 }
 
 @keyframes bgMove{
@@ -21,97 +56,36 @@ body{
   100%{background-position:100%}
 }
 
-/* GLITTER OVERLAY */
-#glitter{
-  position:fixed;
-  width:100%;
-  height:100%;
-  background:url("https://media.giphy.com/media/l0MYt5jPR6QX5pnqM/giphy.gif");
-  opacity:0.2;
-  pointer-events:none;
-}
-
-/* FLOATING HEARTS */
-.heart{
-  position:fixed;
-  color:pink;
-  animation:floatUp 5s linear infinite;
-  font-size:20px;
-}
-
-@keyframes floatUp{
-  from{transform:translateY(100vh);opacity:1;}
-  to{transform:translateY(-10vh);opacity:0;}
-}
-
 /* HEADER */
 .header{
   text-align:center;
   padding:15px;
-  font-size:28px;
+  font-size:24px;
   background:black;
-  border-bottom:3px solid hotpink;
+  border-bottom:3px solid var(--accent);
+}
+
+/* GRID RESPONSIVE */
+.container{
+  display:grid;
+  grid-template-columns:1fr;
+}
+@media(min-width:700px){
+  .container{
+    grid-template-columns:25% 50% 25%;
+  }
 }
 
 /* BOX */
 .box{
-  background:rgba(0,0,0,0.85);
-  border:2px solid hotpink;
+  background:var(--box);
+  border:2px solid var(--accent);
   border-radius:10px;
   padding:10px;
   margin:10px;
 }
 
-/* GRID */
-.container{
-  display:grid;
-  grid-template-columns:25% 50% 25%;
-}
-
-/* MUSIC */
-#music{
-  position:fixed;
-  bottom:20px;
-  left:20px;
-  background:black;
-  padding:10px;
-  border:2px solid hotpink;
-  cursor:move;
-}
-
-/* COMMENTS */
-#comments{height:120px;overflow:auto;background:black}
-
-/* SPARKLES */
-.sparkle{
-  position:fixed;
-  width:10px;
-  height:10px;
-  background:hotpink;
-  border-radius:50%;
-  pointer-events:none;
-  animation:fade 1s forwards;
-}
-@keyframes fade{to{opacity:0;transform:scale(3);}}
-
-/* FALLING TEXT */
-.falling{
-  position:fixed;
-  top:-20px;
-  animation:fall linear forwards;
-  font-size:14px;
-}
-@keyframes fall{
-  to{transform:translateY(110vh);}
-}
-
-/* SETTINGS */
-#settingsBtn{
-  position:fixed;
-  top:10px;
-  right:10px;
-  z-index:999;
-}
+/* SETTINGS PANEL */
 #settingsPanel{
   position:fixed;
   top:0;
@@ -119,39 +93,105 @@ body{
   width:250px;
   height:100%;
   background:black;
-  border-left:2px solid hotpink;
+  border-left:2px solid var(--accent);
   padding:10px;
   transition:.3s;
+  z-index:999;
 }
 #settingsPanel.open{right:0}
+
+#settingsBtn{
+  position:fixed;
+  top:10px;
+  right:10px;
+  z-index:1000;
+}
+
+/* GLITTER */
+#glitter{
+  position:fixed;
+  width:100%;
+  height:100%;
+  pointer-events:none;
+  opacity:.25;
+}
+
+/* FALLING */
+.falling{
+  position:fixed;
+  top:-20px;
+  animation:fall linear forwards;
+}
+@keyframes fall{
+  to{transform:translateY(110vh);}
+}
+
+/* MUSIC */
+#music{
+  position:fixed;
+  bottom:10px;
+  left:10px;
+  background:black;
+  border:2px solid var(--accent);
+  padding:5px;
+}
+
+/* INPUT */
+input,textarea{
+  width:100%;
+  margin-top:5px;
+  background:black;
+  color:white;
+  border:1px solid var(--accent);
+}
 </style>
 </head>
 
 <body>
 
-<div id="glitter"></div>
-
 <button id="settingsBtn">⚙️</button>
 
 <div id="settingsPanel">
 <h3>Chaos Settings</h3>
-<label><input type="checkbox" id="heartsToggle" checked> Floating Hearts</label><br>
-<label><input type="checkbox" id="sparkleToggle" checked> Sparkles</label><br>
-<label><input type="checkbox" id="fallingToggle" checked> Falling Text</label><br>
+
+<label>Theme:
+<select id="theme">
+<option value="">Default</option>
+<option value="emo">Emo</option>
+<option value="scene">Scene</option>
+<option value="glitch">Glitchcore</option>
+<option value="glitter">Glittercore</option>
+</select>
+</label>
+
+<br><br>
+
+<label>Glitter Style:
+<select id="glitterStyle">
+<option value="sparkle">Sparkle</option>
+<option value="stars">Stars</option>
+<option value="symbols">Symbols</option>
+</select>
+</label>
+
 </div>
 
-<div class="header">✨ CHAOS MYSPACE ✨</div>
+<div class="header">✨ CHAOS MYSPACE EVOLVED ✨</div>
 
 <div class="container">
 
+<!-- PROFILE -->
 <div class="box">
 <h3>💖 Profile</h3>
-<p>mood: unhinged but productive</p>
-<div id="views"></div>
+<input id="name" placeholder="Name">
+<textarea id="bio" placeholder="Your chaos bio"></textarea>
+<button onclick="saveProfile()">Save</button>
+<div id="profileView"></div>
 </div>
 
+<!-- TIME -->
 <div class="box">
-<h3>⏱ Time Tracker (barely surviving)</h3>
+<h3>⏱ Time Tracker</h3>
 <table id="sheet">
 <tr><th>Start</th><th>End</th><th>Min</th></tr>
 </table>
@@ -159,6 +199,7 @@ body{
 <div id="total"></div>
 </div>
 
+<!-- COMMENTS -->
 <div class="box">
 <h3>💬 Comments</h3>
 <div id="comments"></div>
@@ -168,59 +209,97 @@ body{
 
 </div>
 
+<!-- MUSIC -->
 <div id="music">
-🎵<br>
 <audio id="audio" controls loop>
 <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3">
 </audio>
 </div>
 
+<div id="glitter"></div>
+
 <script>
 const $=id=>document.getElementById(id);
 
-/* SETTINGS */
+/* SETTINGS PANEL */
 $("settingsBtn").onclick=()=>$("settingsPanel").classList.toggle("open");
 
-/* VIEWS */
-let v=localStorage.v||0; v++; localStorage.v=v;
-$("views").textContent="👀 Views: "+v;
+/* THEME */
+const themeSelect=$("theme");
+themeSelect.value=localStorage.theme||"";
+document.body.className=themeSelect.value;
 
-/* HEARTS */
+themeSelect.onchange=()=>{
+  document.body.className=themeSelect.value;
+  localStorage.theme=themeSelect.value;
+};
+
+/* GLITTER STYLE */
+const glitterStyles={
+  sparkle:"✨",
+  stars:"⭐",
+  symbols:"𖥔"
+};
+
+$("glitterStyle").value=localStorage.glitterStyle||"sparkle";
+
+$("glitterStyle").onchange=()=>{
+  localStorage.glitterStyle=$("glitterStyle").value;
+};
+
+/* FALLING GLITTER */
 setInterval(()=>{
-  if(!$("heartsToggle").checked) return;
-  const h=document.createElement("div");
-  h.className="heart";
-  h.innerText="💖";
-  h.style.left=Math.random()*100+"vw";
-  document.body.appendChild(h);
-  setTimeout(()=>h.remove(),5000);
-},500);
+  const g=document.createElement("div");
+  g.className="falling";
+  const style=localStorage.glitterStyle||"sparkle";
+  g.textContent=glitterStyles[style];
+  g.style.left=Math.random()*100+"vw";
+  g.style.fontSize=(10+Math.random()*20)+"px";
+  g.style.animationDuration=(3+Math.random()*5)+"s";
+  document.body.appendChild(g);
+  setTimeout(()=>g.remove(),8000);
+},200);
 
-/* SPARKLES */
-document.addEventListener("mousemove",e=>{
-  if(!$("sparkleToggle").checked) return;
-  const s=document.createElement("div");
-  s.className="sparkle";
-  s.style.left=e.pageX+"px";
-  s.style.top=e.pageY+"px";
-  document.body.appendChild(s);
-  setTimeout(()=>s.remove(),1000);
-});
+/* PROFILE SAVE */
+function saveProfile(){
+  const data={
+    name:$("name").value,
+    bio:$("bio").value
+  };
+  localStorage.profile=JSON.stringify(data);
+  loadProfile();
+}
 
-/* FALLING TEXT */
-const phrases=["so random","rawr xD","ily","main character","crying lol"];
-setInterval(()=>{
-  if(!$("fallingToggle").checked) return;
-  const f=document.createElement("div");
-  f.className="falling";
-  f.innerText=phrases[Math.floor(Math.random()*phrases.length)];
-  f.style.left=Math.random()*100+"vw";
-  f.style.animationDuration=(3+Math.random()*4)+"s";
-  document.body.appendChild(f);
-  setTimeout(()=>f.remove(),7000);
-},800);
+function loadProfile(){
+  const p=JSON.parse(localStorage.profile||"{}");
+  $("profileView").innerHTML=
+    "<h4>"+(p.name||"anon")+"</h4><p>"+(p.bio||"no thoughts head empty")+"</p>";
+}
+loadProfile();
 
-/* TIME TRACKER */
+/* COMMENTS */
+function postComment(){
+  const c=$("commentInput");
+  if(!c.value.trim()) return;
+
+  const saved=JSON.parse(localStorage.comments||"[]");
+  saved.push(c.value);
+  localStorage.comments=JSON.stringify(saved);
+  c.value="";
+  loadComments();
+}
+
+function loadComments(){
+  $("comments").innerHTML="";
+  JSON.parse(localStorage.comments||"[]").forEach(t=>{
+    const d=document.createElement("div");
+    d.textContent=t;
+    $("comments").appendChild(d);
+  });
+}
+loadComments();
+
+/* TIME TRACKER FIX */
 function addRow(){
   const r=$("sheet").insertRow();
   const s=document.createElement("input");
@@ -234,9 +313,16 @@ function addRow(){
 
   function calc(){
     if(!s.value||!e.value) return;
-    const [sh,sm]=s.value.split(":").map(Number);
-    const [eh,em]=e.value.split(":").map(Number);
-    m.value=Math.max(0,(eh*60+em)-(sh*60+sm));
+
+    let [sh,sm]=s.value.split(":").map(Number);
+    let [eh,em]=e.value.split(":").map(Number);
+
+    let start=sh*60+sm;
+    let end=eh*60+em;
+
+    if(end<start) end+=1440;
+
+    m.value=end-start;
     updateTotal();
   }
 
@@ -252,28 +338,10 @@ function updateTotal(){
   $("total").textContent="Total: "+t+" min";
 }
 
-/* COMMENTS */
-function postComment(){
-  const c=$("commentInput");
-  if(!c.value.trim()) return;
-  const d=document.createElement("div");
-  d.textContent=c.value;
-  $("comments").appendChild(d);
-  c.value="";
-}
-
-/* DRAG MUSIC */
-let down=false,off=[0,0];
-$("music").onmousedown=e=>{
-  down=true;
-  off=[e.clientX-$("music").offsetLeft,e.clientY-$("music").offsetTop];
-};
-document.onmouseup=()=>down=false;
-document.onmousemove=e=>{
-  if(down){
-    $("music").style.left=(e.clientX-off[0])+"px";
-    $("music").style.top=(e.clientY-off[1])+"px";
-  }
+/* MUSIC AUTOPLAY */
+window.onload=()=>{
+  $("audio").volume=0.3;
+  $("audio").play().catch(()=>{});
 };
 </script>
 
