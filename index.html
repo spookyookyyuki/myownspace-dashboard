@@ -1,1 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CHAOS MYSPACE EVOLVED ✨</title>
 
+<style>
+:root{
+  --bg1:#ff00cc;
+  --bg2:#3333ff;
+  --bg3:#00ffee;
+  --accent:hotpink;
+  --box:rgba(0,0,0,0.85);
+  --text:white;
+}
+
+body{
+  margin:0;
+  font-family:"Comic Sans MS",cursive;
+  color:var(--text);
+  background:linear-gradient(270deg,var(--bg1),var(--bg2),var(--bg3));
+  background-size:600% 600%;
+  animation:bgMove 10s infinite alternate;
+}
+
+/* THEMES */
+body.emo{
+  --bg1:#000;
+  --bg2:#111;
+  --bg3:#222;
+  --accent:red;
+}
+body.scene{
+  --bg1:#ff00cc;
+  --bg2:#00ff99;
+  --bg3:#ffff00;
+  --accent:lime;
+}
+body.glitch{
+  --bg1:#000;
+  --bg2:#0ff;
+  --bg3:#f0f;
+  --accent:#0ff;
+  text-shadow:1px 0 red,-1px 0 blue;
+}
+body.glitter{
+  --bg1:#ff9cfb;
+  --bg2:#ffd6f9;
+  --bg3:#fff;
+  --accent:#ff66cc;
+}
+
+@keyframes bgMove{
+  0%{background-position:0%}
+  100%{background-position:100%}
+}
+
+/* HEADER */
+.header{
+  text-align:center;
+  padding:15px;
+  font-size:24px;
+  background:black;
+  border-bottom:3px solid var(--accent);
+}
+
+/* GRID RESPONSIVE */
+.container{
+  display:grid;
+  grid-template-columns:1fr;
+}
+@media(min-width:700px){
+  .container{
+    grid-template-columns:25% 50% 25%;
+  }
+}
+
+/* BOX */
+.box{
+  background:var(--box);
+  border:2px solid var(--accent);
+  border-radius:10px;
+  padding:10px;
+  margin:10px;
+}
+
+/* SETTINGS PANEL */
+#settingsPanel{
+  position:fixed;
+  top:0;
+  right:-260px;
+  width:250px;
+  height:100%;
+  background:black;
+  border-left:2px solid var(--accent);
+  padding:10px;
+  transition:.3s;
+  z-index:999;
+}
+#settingsPanel.open{right:0}
+
+#settingsBtn{
+  position:fixed;
+  top:10px;
+  right:10px;
+  z-index:1000;
+}
+
+/* GLITTER */
+#glitter{
+  position:fixed;
+  width:100%;
+  height:100%;
+  pointer-events:none;
+  opacity:.25;
+}
+
+/* FALLING */
+.falling{
+  position:fixed;
+  top:-20px;
+  animation:fall linear forwards;
+}
+@keyframes fall{
+  to{transform:translateY(110vh);}
+}
+
+/* MUSIC */
+#music{
+  position:fixed;
+  bottom:10px;
+  left:10px;
+  background:black;
+  border:2px solid var(--accent);
+  padding:5px;
+}
+
+/* INPUT */
+input,textarea{
+  width:100%;
+  margin-top:5px;
+  background:black;
+  color:white;
+  border:1px solid var(--accent);
+}
+</style>
+</head>
+
+<body>
+
+<button id="settingsBtn">⚙️</button>
+
+<div id="settingsPanel">
+<h3>Chaos Settings</h3>
+
+<label>Theme:
+<select id="theme">
+<option value="">Default</option>
+<option value="emo">Emo</option>
+<option value="scene">Scene</option>
+<option value="glitch">Glitchcore</option>
+<option value="glitter">Glittercore</option>
+</select>
+</label>
+
+<br><br>
+
+<label>Glitter Style:
+<select id="glitterStyle">
+<option value="sparkle">Sparkle</option>
+<option value="stars">Stars</option>
+<option value="symbols">Symbols</option>
+</select>
+</label>
+
+</div>
+
+<div class="header">✨ CHAOS MYSPACE EVOLVED ✨</div>
+
+<div class="container">
+
+<!-- PROFILE -->
+<div class="box">
+<h3>💖 Profile</h3>
+<input id="name" placeholder="Name">
+<textarea id="bio" placeholder="Your chaos bio"></textarea>
+<button onclick="saveProfile()">Save</button>
+<div id="profileView"></div>
+</div>
+
+<!-- TIME -->
+<div class="box">
+<h3>⏱ Time Tracker</h3>
+<table id="sheet">
+<tr><th>Start</th><th>End</th><th>Min</th></tr>
+</table>
+<button onclick="addRow()">+ Add</button>
+<div id="total"></div>
+</div>
+
+<!-- COMMENTS -->
+<div class="box">
+<h3>💬 Comments</h3>
+<div id="comments"></div>
+<input id="commentInput">
+<button onclick="postComment()">Post</button>
+</div>
+
+</div>
+
+<!-- MUSIC -->
+<div id="music">
+<audio id="audio" controls loop>
+<source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3">
+</audio>
+</div>
+
+<div id="glitter"></div>
+
+<script>
+const $=id=>document.getElementById(id);
+
+/* SETTINGS PANEL */
+$("settingsBtn").onclick=()=>$("settingsPanel").classList.toggle("open");
+
+/* THEME */
+const themeSelect=$("theme");
+themeSelect.value=localStorage.theme||"";
+document.body.className=themeSelect.value;
+
+themeSelect.onchange=()=>{
+  document.body.className=themeSelect.value;
+  localStorage.theme=themeSelect.value;
+};
+
+/* GLITTER STYLE */
+const glitterStyles={
+  sparkle:"✨",
+  stars:"⭐",
+  symbols:"𖥔"
+};
+
+$("glitterStyle").value=localStorage.glitterStyle||"sparkle";
+
+$("glitterStyle").onchange=()=>{
+  localStorage.glitterStyle=$("glitterStyle").value;
+};
+
+/* FALLING GLITTER */
+setInterval(()=>{
+  const g=document.createElement("div");
+  g.className="falling";
+  const style=localStorage.glitterStyle||"sparkle";
+  g.textContent=glitterStyles[style];
+  g.style.left=Math.random()*100+"vw";
+  g.style.fontSize=(10+Math.random()*20)+"px";
+  g.style.animationDuration=(3+Math.random()*5)+"s";
+  document.body.appendChild(g);
+  setTimeout(()=>g.remove(),8000);
+},200);
+
+/* PROFILE SAVE */
+function saveProfile(){
+  const data={
+    name:$("name").value,
+    bio:$("bio").value
+  };
+  localStorage.profile=JSON.stringify(data);
+  loadProfile();
+}
+
+function loadProfile(){
+  const p=JSON.parse(localStorage.profile||"{}");
+  $("profileView").innerHTML=
+    "<h4>"+(p.name||"anon")+"</h4><p>"+(p.bio||"no thoughts head empty")+"</p>";
+}
+loadProfile();
+
+/* COMMENTS */
+function postComment(){
+  const c=$("commentInput");
+  if(!c.value.trim()) return;
+
+  const saved=JSON.parse(localStorage.comments||"[]");
+  saved.push(c.value);
+  localStorage.comments=JSON.stringify(saved);
+  c.value="";
+  loadComments();
+}
+
+function loadComments(){
+  $("comments").innerHTML="";
+  JSON.parse(localStorage.comments||"[]").forEach(t=>{
+    const d=document.createElement("div");
+    d.textContent=t;
+    $("comments").appendChild(d);
+  });
+}
+loadComments();
+
+/* TIME TRACKER FIX */
+function addRow(){
+  const r=$("sheet").insertRow();
+  const s=document.createElement("input");
+  const e=document.createElement("input");
+  const m=document.createElement("input");
+  s.type="time"; e.type="time"; m.readOnly=true;
+
+  r.insertCell(0).appendChild(s);
+  r.insertCell(1).appendChild(e);
+  r.insertCell(2).appendChild(m);
+
+  function calc(){
+    if(!s.value||!e.value) return;
+
+    let [sh,sm]=s.value.split(":").map(Number);
+    let [eh,em]=e.value.split(":").map(Number);
+
+    let start=sh*60+sm;
+    let end=eh*60+em;
+
+    if(end<start) end+=1440;
+
+    m.value=end-start;
+    updateTotal();
+  }
+
+  s.onchange=e.onchange=calc;
+}
+
+function updateTotal(){
+  let t=0;
+  [...$("sheet").rows].slice(1).forEach(r=>{
+    const v=r.cells[2].firstChild.value;
+    if(v) t+=+v;
+  });
+  $("total").textContent="Total: "+t+" min";
+}
+
+/* MUSIC AUTOPLAY */
+window.onload=()=>{
+  $("audio").volume=0.3;
+  $("audio").play().catch(()=>{});
+};
+</script>
+
+</body>
+</html>
