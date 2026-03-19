@@ -210,7 +210,15 @@ themeSelect.onchange=()=>{
 notes.value=localStorage.notes||"";
 notes.oninput=()=>localStorage.notes=notes.value;
 
-// ROWS
+  function calc(){
+    if(!start.value||!end.value){ mins.value=""; updateTotal(); return; }
+    const [sh,sm]=start.value.split(":").map(x=>parseInt(x,10));
+    const [eh,em]=end.value.split(":").map(x=>parseInt(x,10));
+    if([sh,sm,eh,em].some(x=>isNaN(x))){ mins.value=""; updateTotal(); return; }
+    let diff=(eh*60+em)-(sh*60+sm); if(diff<0) diff=0;
+    mins.value=diff;
+    saveRows(); updateTotal();
+  }
 function addRow(d={}) {
   const row = sheet.insertRow();
   const start = document.createElement("input");
@@ -219,7 +227,6 @@ function addRow(d={}) {
   const del = document.createElement("button");
 
   start.type="time"; end.type="time"; mins.type="number"; mins.readOnly=true; del.textContent="❌";
-
   del.onclick = ()=>{row.remove(); saveRows(); updateTotal();};
 
   if(sheet.rows.length>1 && !d.start){
@@ -242,8 +249,19 @@ function addRow(d={}) {
     let diff=(eh*60+em)-(sh*60+sm); if(diff<0) diff=0;
     mins.value=diff;
     saveRows(); updateTotal();
+
+    // AUTO ADD NEW ROW if this is the last row
+    const lastRow = sheet.rows[sheet.rows.length-1];
+    if(row === lastRow && start.value && end.value){
+      addRow();
+    }
   }
 
+  start.addEventListener("change", calc);
+  start.addEventListener("blur", calc);
+  end.addEventListener("change", calc);
+  end.addEventListener("blur", calc);
+}                  
   start.addEventListener("change", calc);
   start.addEventListener("blur", calc);
   end.addEventListener("change", calc);
