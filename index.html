@@ -5,198 +5,133 @@
 <title>MySpace Productivity</title>
 
 <style>
-/* BASE */
 body{
   margin:0;
   font-family:"Comic Sans MS",cursive;
   background:#111;
   color:#ff66cc;
-  -webkit-text-size-adjust:100%;
 }
 
-/* ORIGINAL THEMES */
-body.scene{background:#111;color:#ff00aa}
-body.kawaii{background:#ffe6f5;color:#ff1493}
-body.pastel{background:#e6f7ff;color:#9966ff}
-body.gothic{background:#0b0b0b;color:#ff66cc}
-
-/* NEW THEMES */
-
-/* ✨ GLITTER */
-body.glitter{
-  background:black;
-  color:#ffccff;
-  background-image:url("https://i.imgur.com/8QfQZ6T.gif");
-}
-
-/* 🖤 EMO */
-body.emo{
-  background:#000;
-  color:#ff0000;
-  font-family:"Courier New",monospace;
-}
-
-/* ⚡ NEON */
-body.neon{
-  background:#000;
-  color:#39ff14;
-  text-shadow:0 0 6px #39ff14,0 0 12px #39ff14;
-}
-
-/* 💿 Y2K */
-body.y2k{
-  background:linear-gradient(135deg,#ff00cc,#3333ff);
-  color:white;
-  font-family:Verdana,sans-serif;
-}
-
-/* BG */
-#bg-layer{
-  position:fixed;
-  width:100%;
-  height:100%;
-  top:0;
-  left:0;
-  pointer-events:none;
-  z-index:0;
-}
+/* THEMES */
+body.scene{color:#ff00aa}
+body.kawaii{color:#ff1493}
+body.pastel{color:#9966ff}
+body.gothic{color:#ff66cc}
+body.emo{color:red;font-family:"Courier New"}
+body.neon{color:#39ff14;text-shadow:0 0 6px #39ff14}
+body.y2k{color:white}
 
 /* HEADER */
 .header{
   background:#ff0099;
   padding:12px;
   text-align:center;
-  font-size:20px;
+  font-size:22px;
   color:white;
 }
 
 /* LAYOUT */
 .container{
   display:grid;
-  grid-template-columns:260px 1fr 260px;
-  gap:20px;
-  padding:20px;
+  grid-template-columns:250px 1fr 250px;
+  gap:15px;
+  padding:15px;
 }
-
 @media(max-width:900px){
-  .container{
-    grid-template-columns:1fr;
-    padding:10px;
-    gap:10px;
-  }
+  .container{grid-template-columns:1fr;}
 }
 
 /* BOX */
 .box{
-  background:#1a1a1a;
+  background:rgba(20,20,20,0.85);
   border:3px solid hotpink;
-  padding:15px;
+  padding:12px;
   border-radius:10px;
 }
 
-/* THEME EFFECTS */
-body.neon .box{
-  box-shadow:0 0 12px #39ff14;
-  border-color:#39ff14;
-}
-
-body.emo .box{
-  border-color:red;
-}
-
-body.glitter .box{
-  background:rgba(0,0,0,0.7);
-}
-
-body.y2k .box{
-  backdrop-filter:blur(6px);
-  background:rgba(255,255,255,0.1);
-}
-
-/* AVATAR */
-#banner{
-  height:120px;
-  background:#222;
-  background-size:cover;
-  border:2px solid hotpink;
-  margin-bottom:10px;
-}
-
-#avatar{
-  width:80px;
-  border-radius:50%;
-  border:3px solid hotpink;
-  display:block;
-  margin:auto;
-}
-
-/* TABLE */
-.table-container{overflow-x:auto}
-table{min-width:320px;border-collapse:collapse}
-th,td{border:1px solid hotpink;padding:8px;text-align:center}
-
 /* INPUTS */
 input,select,textarea,button{
-  font-size:18px;
+  width:100%;
+  margin-top:5px;
+  padding:8px;
   border-radius:6px;
+  font-size:16px;
 }
-
-input,select,textarea{
+input,textarea,select{
   background:black;
   color:#ff66cc;
   border:1px solid hotpink;
-  padding:8px;
-  width:100%;
 }
-
-/* BUTTON THEMES */
 button{
   background:#ff0099;
   color:white;
   border:none;
-  padding:12px;
-  width:100%;
-  margin-top:6px;
+  cursor:pointer;
 }
+button:hover{opacity:0.85}
 
-body.glitter button{
-  background:linear-gradient(45deg,#ff66cc,#fff,#ff66cc);
-  color:black;
-}
-
-body.neon button{
-  background:black;
-  color:#39ff14;
-  border:1px solid #39ff14;
-}
-
-body.emo button{
-  background:black;
-  color:red;
-  border:1px solid red;
-}
-
-body.y2k button{
-  background:linear-gradient(90deg,#00ffff,#ff00ff);
-}
+/* TABLE */
+table{width:100%;border-collapse:collapse}
+th,td{border:1px solid hotpink;padding:6px;text-align:center}
 
 /* GRAPH */
-#graph{height:20px;background:#333;border:2px solid hotpink;margin-top:6px}
-#bar{height:100%;width:0%;background:linear-gradient(90deg,hotpink,#ff66cc)}
+#graph{height:18px;background:#333;margin-top:6px}
+#bar{height:100%;width:0%;background:hotpink}
 
 /* COMMENTS */
-#comments{height:120px;overflow:auto;background:black;padding:6px}
-
-/* FLOAT */
-.decor{
-  position:absolute;
-  font-size:24px;
-  animation:float 12s linear infinite;
+#comments{
+  height:120px;
+  overflow:auto;
+  background:black;
+  padding:6px;
+  border:1px solid hotpink;
 }
 
-@keyframes float{
-  0%{transform:translateY(100vh)}
-  100%{transform:translateY(-10vh)}
+/* SETTINGS */
+#settingsBtn{
+  position:fixed;
+  top:10px;
+  right:10px;
+  z-index:999;
+  padding:10px;
+}
+
+#settingsPanel{
+  position:fixed;
+  top:0;
+  right:-260px;
+  width:260px;
+  height:100%;
+  background:#111;
+  border-left:3px solid hotpink;
+  padding:15px;
+  transition:0.3s;
+  z-index:998;
+}
+#settingsPanel.open{right:0}
+
+/* BACKGROUND */
+#customBG{
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  z-index:-2;
+  background-size:cover;
+  background-position:center;
+}
+
+#bgOverlay{
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background:black;
+  opacity:0;
+  z-index:-1;
+  backdrop-filter:blur(0px);
 }
 
 /* POPUP */
@@ -206,59 +141,73 @@ body.y2k button{
   left:50%;
   transform:translate(-50%,-50%);
   background:#ff0099;
-  color:white;
   padding:20px;
   display:none;
+  color:white;
 }
-
-textarea{min-height:80px}
-
 </style>
 </head>
 
 <body class="scene">
 
-<div id="bg-layer"></div>
+<!-- SETTINGS -->
+<button id="settingsBtn">⚙️</button>
 
-<div class="header">MySpace Productivity Dashboard ✨</div>
+<div id="settingsPanel">
+  <h3>Customize</h3>
+
+  <label>Background</label>
+  <input type="file" id="bgUpload">
+
+  <label>Size</label>
+  <select id="bgSize">
+    <option value="cover">Cover</option>
+    <option value="contain">Contain</option>
+    <option value="auto">Auto</option>
+  </select>
+
+  <label>Dark</label>
+  <input type="range" id="bgDark" min="0" max="0.8" step="0.05">
+
+  <label>Blur</label>
+  <input type="range" id="bgBlur" min="0" max="10">
+
+  <button onclick="resetBG()">Reset</button>
+</div>
+
+<div class="header">MySpace Productivity ✨</div>
 
 <div class="container">
 
+<!-- LEFT -->
 <div class="box">
-<div id="banner"></div>
-<img id="avatar">
-
-<h4>Avatar</h4>
-<input type="file" id="avatarUpload">
-
-<h4>Banner</h4>
-<input type="file" id="bannerUpload">
-
 <h4>Theme</h4>
 <select id="themeSelect">
 <option value="scene">Scene</option>
 <option value="kawaii">Kawaii</option>
 <option value="pastel">Pastel</option>
 <option value="gothic">Gothic</option>
-<option value="glitter">✨ Glitter</option>
-<option value="emo">🖤 Emo</option>
-<option value="neon">⚡ Neon</option>
-<option value="y2k">💿 Y2K</option>
+<option value="emo">Emo</option>
+<option value="neon">Neon</option>
+<option value="y2k">Y2K</option>
 </select>
 </div>
 
+<!-- CENTER -->
 <div class="box">
 <h3>Production Time</h3>
-<div class="table-container">
 <table id="sheet">
 <tr><th>Start</th><th>End</th><th>Minutes</th></tr>
 </table>
-</div>
-<div id="total">Total: 0</div>
-<div id="timeDisplay">0 minutes</div>
+
+<button onclick="addRow()">+ Add Row</button>
+<button onclick="clearRows()">Clear</button>
+
+<div id="timeDisplay"></div>
 <div id="graph"><div id="bar"></div></div>
 </div>
 
+<!-- RIGHT -->
 <div>
 <div class="box">
 <h3>Notes</h3>
@@ -280,100 +229,159 @@ textarea{min-height:80px}
 <div id="goalPopup">✨ Goal Reached! ✨</div>
 
 <script>
-const sheet=document.getElementById("sheet")
+const sheet = document.getElementById("sheet")
 
-avatarUpload.onchange=e=>{
-let r=new FileReader()
-r.onload=()=>{avatar.src=r.result;localStorage.avatar=r.result}
-r.readAsDataURL(e.target.files[0])
+/* SETTINGS PANEL */
+settingsBtn.onclick = () => settingsPanel.classList.toggle("open")
+
+/* BACKGROUND ELEMENTS */
+const bg = document.createElement("div")
+bg.id="customBG"
+document.body.appendChild(bg)
+
+const overlay = document.createElement("div")
+overlay.id="bgOverlay"
+document.body.appendChild(overlay)
+
+/* LOAD BG */
+if(localStorage.bgImage) bg.style.backgroundImage=`url(${localStorage.bgImage})`
+if(localStorage.bgSize) bg.style.backgroundSize=localStorage.bgSize
+if(localStorage.bgDark) overlay.style.opacity=localStorage.bgDark
+if(localStorage.bgBlur) overlay.style.backdropFilter=`blur(${localStorage.bgBlur}px)`
+
+bgUpload.onchange=e=>{
+  let r=new FileReader()
+  r.onload=()=>{
+    bg.style.backgroundImage=`url(${r.result})`
+    localStorage.bgImage=r.result
+  }
+  r.readAsDataURL(e.target.files[0])
 }
 
-bannerUpload.onchange=e=>{
-let r=new FileReader()
-r.onload=()=>{banner.style.backgroundImage="url("+r.result+")";localStorage.banner=r.result}
-r.readAsDataURL(e.target.files[0])
+bgSize.onchange=()=>{bg.style.backgroundSize=bgSize.value;localStorage.bgSize=bgSize.value}
+bgDark.oninput=()=>{overlay.style.opacity=bgDark.value;localStorage.bgDark=bgDark.value}
+bgBlur.oninput=()=>{overlay.style.backdropFilter=`blur(${bgBlur.value}px)`;localStorage.bgBlur=bgBlur.value}
+
+function resetBG(){
+  localStorage.removeItem("bgImage")
+  localStorage.removeItem("bgSize")
+  localStorage.removeItem("bgDark")
+  localStorage.removeItem("bgBlur")
+  location.reload()
 }
 
-if(localStorage.avatar) avatar.src=localStorage.avatar
-if(localStorage.banner) banner.style.backgroundImage="url("+localStorage.banner+")"
-
-themeSelect.onchange=()=>{
+/* THEME */
+themeSelect.value=localStorage.theme||"scene"
 document.body.className=themeSelect.value
-localStorage.theme=themeSelect.value
+themeSelect.onchange=()=>{
+  document.body.className=themeSelect.value
+  localStorage.theme=themeSelect.value
 }
 
-if(localStorage.theme){
-document.body.className=localStorage.theme
-themeSelect.value=localStorage.theme
-}
-
+/* NOTES */
 notes.value=localStorage.notes||""
 notes.oninput=()=>localStorage.notes=notes.value
 
-function addRow(){
-let row=sheet.insertRow()
-let sh=document.createElement("input"),sm=document.createElement("input"),sap=document.createElement("select"),eh=document.createElement("input"),em=document.createElement("input"),eap=document.createElement("select"),mins=document.createElement("input")
+/* ROWS */
+function addRow(data={}){
+  let row=sheet.insertRow()
+  let start=document.createElement("input")
+  let end=document.createElement("input")
+  let mins=document.createElement("input")
 
-sh.type=eh.type="number";sh.min=1;sh.max=12
-sm.type=em.type="number";sm.min=0;sm.max=59
-mins.type="number"
+  start.type="time"
+  end.type="time"
+  mins.type="number"
 
-sap.innerHTML="<option>AM</option><option>PM</option>"
-eap.innerHTML="<option>AM</option><option>PM</option>"
+  start.value=data.start||""
+  end.value=data.end||""
+  mins.value=data.mins||""
 
-row.insertCell(0).append(sh,":",sm,sap)
-row.insertCell(1).append(eh,":",em,eap)
-row.insertCell(2).append(mins)
+  row.insertCell(0).appendChild(start)
+  row.insertCell(1).appendChild(end)
+  row.insertCell(2).appendChild(mins)
 
-function calc(){
-if(!sh.value||!eh.value)return
-let sH=Number(sh.value),sM=Number(sm.value||0),eH=Number(eh.value),eM=Number(em.value||0)
-if(sap.value==="PM"&&sH!==12)sH+=12
-if(sap.value==="AM"&&sH===12)sH=0
-if(eap.value==="PM"&&eH!==12)eH+=12
-if(eap.value==="AM"&&eH===12)eH=0
-let diff=(eH*60+eM)-(sH*60+sM)
-if(diff>=0)mins.value=diff
-updateTotal()
+  function calc(){
+    if(!start.value||!end.value)return
+    let s=new Date("1970-01-01T"+start.value)
+    let e=new Date("1970-01-01T"+end.value)
+    let diff=(e-s)/60000
+    if(diff>=0) mins.value=diff
+    saveRows()
+    updateTotal()
+  }
+
+  start.onchange=end.onchange=calc
+  mins.oninput=()=>{saveRows();updateTotal()}
 }
 
-sh.onchange=sm.onchange=sap.onchange=eh.onchange=em.onchange=eap.onchange=calc
-mins.oninput=updateTotal
+/* SAVE/LOAD */
+function saveRows(){
+  let data=[]
+  document.querySelectorAll("#sheet tr").forEach((r,i)=>{
+    if(i===0)return
+    let inputs=r.querySelectorAll("input")
+    data.push({start:inputs[0].value,end:inputs[1].value,mins:inputs[2].value})
+  })
+  localStorage.rows=JSON.stringify(data)
 }
 
-for(let i=0;i<20;i++)addRow()
+function loadRows(){
+  let data=JSON.parse(localStorage.rows||"[]")
+  if(data.length===0){for(let i=0;i<5;i++)addRow()}
+  else data.forEach(d=>addRow(d))
+  updateTotal()
+}
 
+function clearRows(){
+  localStorage.removeItem("rows")
+  location.reload()
+}
+
+/* TOTAL */
 function updateTotal(){
-let total=0
-document.querySelectorAll("#sheet tr").forEach((r,i)=>{
-if(i===0)return
-let v=r.cells[2].firstChild.value
-if(v)total+=Number(v)
-})
-let h=Math.floor(total/60),m=total%60
-total?timeDisplay.innerText=`${total} minutes (${h}h ${m}m)`:""
-bar.style.width=Math.min((total/480)*100,100)+"%"
-if(total>=480){
-goalPopup.style.display="block"
-setTimeout(()=>goalPopup.style.display="none",3000)
-}
+  let total=0
+  document.querySelectorAll("#sheet tr").forEach((r,i)=>{
+    if(i===0)return
+    let v=r.cells[2].firstChild.value
+    if(v) total+=Number(v)
+  })
+
+  let h=Math.floor(total/60),m=total%60
+  timeDisplay.innerText=total?`${total} min (${h}h ${m}m)`:""
+  bar.style.width=Math.min((total/480)*100,100)+"%"
+
+  if(total>=480){
+    goalPopup.style.display="block"
+    setTimeout(()=>goalPopup.style.display="none",3000)
+  }
 }
 
+/* COMMENTS */
 function postComment(){
-let d=document.createElement("div")
-d.innerText=commentInput.value
-comments.appendChild(d)
-commentInput.value=""
+  if(!commentInput.value.trim())return
+  let d=document.createElement("div")
+  d.textContent=commentInput.value
+  comments.appendChild(d)
+
+  let saved=JSON.parse(localStorage.comments||"[]")
+  saved.push(commentInput.value)
+  localStorage.comments=JSON.stringify(saved)
+
+  commentInput.value=""
 }
 
-let icons=["🎀","🐱","💖","⭐","🖤"]
-for(let i=0;i<15;i++){
-let d=document.createElement("div")
-d.className="decor"
-d.innerText=icons[Math.floor(Math.random()*icons.length)]
-d.style.left=Math.random()*100+"vw"
-bg-layer.appendChild(d)
+function loadComments(){
+  let saved=JSON.parse(localStorage.comments||"[]")
+  saved.forEach(c=>{
+    let d=document.createElement("div")
+    d.textContent=c
+    comments.appendChild(d)
+  })
 }
+
+loadRows()
+loadComments()
 </script>
 
 </body>
