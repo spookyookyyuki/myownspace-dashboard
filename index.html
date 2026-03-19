@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>CHAOS APP 💿</title>
 
@@ -12,15 +12,13 @@
   --bg1:#ff00cc;
   --bg2:#3333ff;
   --bg3:#00ffee;
-  --box:rgba(0,0,0,0.75);
-  --text:white;
 }
 
 body{
   margin:0;
-  font-family:-apple-system, BlinkMacSystemFont, sans-serif;
+  font-family:sans-serif;
   color:white;
-  background-color:black;
+  background:black;
   background:linear-gradient(270deg,var(--bg1),var(--bg2),var(--bg3));
   background-size:600% 600%;
   animation:bgMove 10s infinite alternate;
@@ -31,28 +29,25 @@ body{
   100%{background-position:100%}
 }
 
-#app{height:100vh;overflow:hidden;position:relative;}
-
 .page{
   position:absolute;
   width:100%;
   height:100%;
   left:100%;
   transition:.3s;
-  overflow-y:auto;
-  padding-bottom:90px;
+  overflow:auto;
+  padding-bottom:80px;
 }
 .page.active{left:0;}
 .page.left{left:-100%;}
 
 .box{
-  background:var(--box);
+  background:rgba(0,0,0,0.7);
   margin:12px;
   padding:12px;
   border-radius:16px;
 }
 
-/* NAV */
 #nav{
   position:fixed;
   bottom:0;
@@ -64,16 +59,24 @@ body{
   align-items:center;
 }
 
-#nav button{
+button{
   background:none;
   border:none;
   color:white;
-  font-size:20px;
+  font-size:18px;
 }
 
-#nav button.active{
-  color:var(--accent);
-  transform:scale(1.2);
+.activeBtn{color:hotpink}
+
+/* TABLE */
+#sheet{width:100%;}
+#sheet td,#sheet th{text-align:center;padding:6px;}
+
+.deleteBtn{
+  background:red;
+  border:none;
+  color:white;
+  border-radius:6px;
 }
 
 /* SETTINGS */
@@ -83,50 +86,10 @@ body{
   width:100%;
   height:70%;
   background:black;
-  padding:20px;
   transition:.4s;
+  padding:20px;
 }
 #settingsPanel.open{bottom:0;}
-
-#closeSettings{
-  position:absolute;
-  right:15px;
-  top:10px;
-  background:none;
-  color:white;
-  border:none;
-  font-size:20px;
-}
-
-/* TIME TABLE */
-#sheet{width:100%;}
-#sheet td, #sheet th{text-align:center;padding:6px;}
-
-.deleteBtn{
-  background:red;
-  color:white;
-  border:none;
-  border-radius:6px;
-}
-
-/* COLLAGE */
-#collage{position:relative;height:200px;}
-#collage img{
-  position:absolute;
-  width:80px;
-}
-
-/* PROFILE */
-#pfp{
-  width:100px;
-  height:100px;
-  border-radius:12px;
-}
-
-input,textarea,select,button{
-  width:100%;
-  margin-top:6px;
-}
 </style>
 </head>
 
@@ -138,7 +101,6 @@ input,textarea,select,button{
 <div class="page active">
 <div class="box">
 <h3>💖 Profile</h3>
-<img id="pfp">
 <input id="name" placeholder="Name">
 <textarea id="bio"></textarea>
 <button onclick="saveProfile()">Save</button>
@@ -146,10 +108,10 @@ input,textarea,select,button{
 </div>
 </div>
 
-<!-- TIME TRACKER -->
+<!-- TIME -->
 <div class="page">
 <div class="box">
-<h3>⏱ Time Tracker</h3>
+<h3>⏱ Productivity Tracker</h3>
 
 <table id="sheet">
 <tr>
@@ -174,22 +136,6 @@ input,textarea,select,button{
 <input id="commentInput">
 <button onclick="postComment()">Post</button>
 </div>
-
-<div class="box">
-<h3>📖 Guestbook</h3>
-<div id="guestbook"></div>
-<input id="guestInput">
-<button onclick="addGuest()">Sign</button>
-</div>
-</div>
-
-<!-- COLLAGE -->
-<div class="page">
-<div class="box">
-<h3>📸 Collage</h3>
-<input type="file" id="collageUpload" multiple>
-<div id="collage"></div>
-</div>
 </div>
 
 </div>
@@ -199,14 +145,11 @@ input,textarea,select,button{
 <button onclick="goPage(0)">🏠</button>
 <button onclick="goPage(1)">⏱</button>
 <button onclick="goPage(2)">💬</button>
-<button onclick="goPage(3)">📸</button>
 <button onclick="toggleSettings()">⚙️</button>
 </div>
 
 <!-- SETTINGS -->
 <div id="settingsPanel">
-<button id="closeSettings">✖</button>
-
 <h3>Settings</h3>
 
 <label>Theme</label>
@@ -214,16 +157,7 @@ input,textarea,select,button{
 <option value="">Default</option>
 <option value="emo">Emo</option>
 <option value="scene">Scene</option>
-<option value="glitch">Glitch</option>
-<option value="glitter">Glitter</option>
 </select>
-
-<label>Background</label>
-<input type="checkbox" id="bgToggle">
-<input type="file" id="bgUpload">
-
-<label>Profile Pic</label>
-<input type="file" id="pfpUpload">
 
 </div>
 
@@ -243,7 +177,7 @@ function goPage(i){
   });
 
   navBtns.forEach((b,idx)=>{
-    if(idx!==4)b.classList.toggle("active",idx===i);
+    if(idx<3)b.classList.toggle("activeBtn",idx===i);
   });
 
   current=i;
@@ -253,49 +187,6 @@ function goPage(i){
 function toggleSettings(){
   $("settingsPanel").classList.toggle("open");
 }
-$("closeSettings").onclick=()=>$("settingsPanel").classList.remove("open");
-
-/* BASE64 */
-function toBase64(file){
-  return new Promise(res=>{
-    const r=new FileReader();
-    r.onload=()=>res(r.result);
-    r.readAsDataURL(file);
-  });
-}
-
-/* BACKGROUND FIX */
-function applyBackground(){
-  if(localStorage.bg && localStorage.bgToggle==="true"){
-    document.body.style.background=`url(${localStorage.bg}) center/cover no-repeat`;
-  }else{
-    document.body.style.background="";
-  }
-}
-
-$("bgUpload").onchange=async e=>{
-  const d=await toBase64(e.target.files[0]);
-  localStorage.bg=d;
-  applyBackground();
-};
-
-$("bgToggle").onchange=e=>{
-  localStorage.bgToggle=e.target.checked;
-  applyBackground();
-};
-
-if(localStorage.bgToggle==="true"){
-  $("bgToggle").checked=true;
-}
-applyBackground();
-
-/* PROFILE PIC */
-$("pfpUpload").onchange=async e=>{
-  const d=await toBase64(e.target.files[0]);
-  localStorage.pfp=d;
-  $("pfp").src=d;
-};
-if(localStorage.pfp) $("pfp").src=localStorage.pfp;
 
 /* PROFILE */
 function saveProfile(){
@@ -331,60 +222,7 @@ function loadComments(){
 }
 loadComments();
 
-/* GUESTBOOK */
-function addGuest(){
-  let v=$("guestInput").value;
-  if(!v)return;
-  let s=JSON.parse(localStorage.guestbook||"[]");
-  s.push({text:v,time:new Date().toLocaleString()});
-  localStorage.guestbook=JSON.stringify(s);
-  $("guestInput").value="";
-  loadGuest();
-}
-function loadGuest(){
-  $("guestbook").innerHTML="";
-  JSON.parse(localStorage.guestbook||"[]").forEach(e=>{
-    let d=document.createElement("div");
-    d.innerHTML=`<b>${e.time}</b><br>${e.text}`;
-    $("guestbook").appendChild(d);
-  });
-}
-loadGuest();
-
-/* COLLAGE */
-$("collageUpload").onchange=async e=>{
-  let s=JSON.parse(localStorage.collage||"[]");
-  for(const f of e.target.files){
-    s.push(await toBase64(f));
-  }
-  localStorage.collage=JSON.stringify(s);
-  loadCollage();
-};
-
-function loadCollage(){
-  const wrap=$("collage");
-  wrap.innerHTML="";
-  const s=JSON.parse(localStorage.collage||"[]");
-
-  s.forEach((src,i)=>{
-    const img=document.createElement("img");
-    img.src=src;
-
-    img.style.left=Math.random()*200+"px";
-    img.style.top=Math.random()*200+"px";
-
-    img.ondblclick=()=>{
-      s.splice(i,1);
-      localStorage.collage=JSON.stringify(s);
-      loadCollage();
-    };
-
-    wrap.appendChild(img);
-  });
-}
-loadCollage();
-
-/* TIME TRACKER FULL */
+/* TIME TRACKER WITH AUTO ROLLOVER */
 let timeData = JSON.parse(localStorage.timeData || "[]");
 
 function addRow(data={start:"",end:""}){
@@ -405,13 +243,10 @@ function saveTime(){
 
 function calcMinutes(start,end){
   if(!start||!end)return 0;
-
   let [sh,sm]=start.split(":").map(Number);
   let [eh,em]=end.split(":").map(Number);
-
   let s=sh*60+sm;
   let e=eh*60+em;
-
   if(e<s)e+=1440;
   return e-s;
 }
@@ -442,10 +277,22 @@ function renderTime(){
     function update(){
       timeData[i].start=start.value;
       timeData[i].end=end.value;
+
       const mins=calcMinutes(start.value,end.value);
       dur.textContent=mins?format(mins):"-";
+
+      /* 🔥 AUTO ROLLOVER */
+      if(end.value){
+        if(!timeData[i+1]){
+          timeData.push({start:end.value,end:""});
+        } else if(!timeData[i+1].start){
+          timeData[i+1].start=end.value;
+        }
+      }
+
       totalCalc();
       saveTime();
+      renderTime();
     }
 
     start.onchange=end.onchange=update;
@@ -471,7 +318,7 @@ function renderTime(){
 function totalCalc(){
   let total=0;
   timeData.forEach(r=>total+=calcMinutes(r.start,r.end));
-  $("total").textContent="Total: "+format(total)+" ("+total+" min)";
+  $("total").textContent="Total: "+format(total);
 }
 
 renderTime();
