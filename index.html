@@ -11,8 +11,6 @@ body{
   background:#111;
   color:#ff66cc;
 }
-
-/* THEMES */
 body.scene{color:#ff00aa}
 body.kawaii{color:#ff1493}
 body.pastel{color:#9966ff}
@@ -21,16 +19,16 @@ body.emo{color:red;font-family:"Courier New"}
 body.neon{color:#39ff14;text-shadow:0 0 6px #39ff14}
 body.y2k{color:white}
 
-/* COMPACT UI */
-body.compact{font-size:13px}
-.container.compact{gap:8px;padding:8px}
-.box.compact{padding:8px;border-width:2px}
-input.compact, select.compact, textarea.compact, button.compact{padding:6px;font-size:14px}
-table.compact th, table.compact td{padding:4px;font-size:12px}
-#graph.compact{height:14px}
-#settingsBtn.compact{padding:6px;font-size:14px}
-.header.compact{font-size:16px;padding:6px}
-#comments.compact{max-height:140px}
+/* ---------- ULTRA COMPACT UI ---------- */
+body.compact{font-size:12px}
+.container.compact{gap:6px;padding:6px}
+.box.compact{padding:6px;border-width:1.5px}
+input.compact,select.compact,textarea.compact,button.compact{padding:4px;font-size:12px}
+table.compact th,table.compact td{padding:2px;font-size:11px}
+#graph.compact{height:12px}
+#settingsBtn.compact{padding:4px;font-size:12px}
+.header.compact{font-size:14px;padding:4px}
+#comments.compact{max-height:100px;font-size:11px}
 
 /* HEADER */
 .header{
@@ -39,15 +37,6 @@ table.compact th, table.compact td{padding:4px;font-size:12px}
   text-align:center;
   font-size:22px;
   color:white;
-}
-
-/* SPARKLY ASCII DIVIDER */
-#divider{
-  color:#ff66cc;
-  text-align:center;
-  line-height:1.1;
-  font-size:12px;
-  margin:4px 0;
 }
 
 /* LAYOUT */
@@ -115,7 +104,6 @@ th,td{border:1px solid hotpink;padding:6px;text-align:center}
   z-index:999;
   padding:10px;
 }
-
 #settingsPanel{
   position:fixed;
   top:0;
@@ -130,18 +118,17 @@ th,td{border:1px solid hotpink;padding:6px;text-align:center}
 }
 #settingsPanel.open{right:0}
 
-/* BACKGROUND */
+/* BACKGROUNDS */
 #customBG{
   position:fixed;
   top:0;
   left:0;
   width:100%;
   height:100%;
-  z-index:-2;
+  z-index:-3;
   background-size:cover;
   background-position:center;
 }
-
 #bgOverlay{
   position:fixed;
   top:0;
@@ -150,8 +137,22 @@ th,td{border:1px solid hotpink;padding:6px;text-align:center}
   height:100%;
   background:black;
   opacity:0;
-  z-index:-1;
+  z-index:-2;
   backdrop-filter:blur(0px);
+}
+#asciiBG{
+  position:fixed;
+  top:0; left:0;
+  width:100%; height:100%;
+  z-index:-1;
+  color:#ff66cc;
+  font-family:"Comic Sans MS",cursive;
+  font-size:10px;
+  line-height:10px;
+  white-space:pre;
+  pointer-events:none;
+  opacity:0.25;
+  text-align:center;
 }
 
 /* POPUP */
@@ -164,7 +165,6 @@ th,td{border:1px solid hotpink;padding:6px;text-align:center}
   padding:20px;
   display:none;
   color:white;
-  border-radius:8px;
 }
 
 /* NEON PULSE ANIMATION */
@@ -173,21 +173,21 @@ th,td{border:1px solid hotpink;padding:6px;text-align:center}
   50%{box-shadow:0 0 20px currentColor;}
   100%{box-shadow:0 0 8px currentColor;}
 }
-#bar.pulse,#goalPopup.pulse{animation:neonPulse 1s infinite alternate}
+#bar.pulse,#goalPopup.pulse{animation:neonPulse 1s infinite alternate;border-radius:8px}
 
 /* MOBILE FRIENDLY */
 @media (max-width: 768px){
-  body { font-size: 14px; }
-  .container{grid-template-columns:1fr !important; gap:8px; padding:8px;}
-  .box{font-size:14px;padding:10px;border-width:2px;}
-  input, select, textarea, button{font-size:16px;padding:8px;}
-  table, th, td{font-size:12px;padding:4px;}
+  body { font-size: 12px; }
+  .container{grid-template-columns:1fr !important; gap:6px; padding:6px;}
+  .box{font-size:12px;padding:6px;border-width:1.5px;}
+  input, select, textarea, button{font-size:12px;padding:4px;}
+  table, th, td{font-size:11px;padding:2px;}
   #settingsPanel{width:260px !important; right:-260px !important;}
   #settingsPanel.open{right:0 !important;}
-  #settingsBtn{top:5px; right:5px; padding:10px; font-size:16px;}
-  #comments{max-height:180px;}
-  #graph{height:16px;}
-  .header{ font-size:18px; padding:8px; }
+  #settingsBtn{top:5px; right:5px; padding:4px; font-size:12px;}
+  #comments{max-height:100px;}
+  #graph{height:12px;}
+  .header{ font-size:14px; padding:4px; }
 }
 </style>
 </head>
@@ -214,26 +214,18 @@ th,td{border:1px solid hotpink;padding:6px;text-align:center}
   <label>Blur</label>
   <input type="range" id="bgBlur" min="0" max="10">
   <h3>Column Widths</h3>
-  <label>Left Column (%)</label><input type="number" id="colLeft" min="10" max="50" value="25">
-  <label>Center Column (%)</label><input type="number" id="colCenter" min="30" max="80" value="50">
-  <label>Right Column (%)</label><input type="number" id="colRight" min="10" max="50" value="25">
+  <label>Left Column (%)</label>
+  <input type="number" id="colLeft" min="10" max="50" value="25">
+  <label>Center Column (%)</label>
+  <input type="number" id="colCenter" min="30" max="80" value="50">
+  <label>Right Column (%)</label>
+  <input type="number" id="colRight" min="10" max="50" value="25">
   <button onclick="applyColWidths()">Apply Column Widths</button>
   <button onclick="resetBG()">Reset Background</button>
 </div>
 
-<!-- HEADER & SPARKLY DIVIDER -->
-<div id="divider">
-┆　┆　┆　┆　┆<br>
-┆　┆  ࣪ ˖☆ ࣪⭑┆ ݁˖ .☆ . ݁ ˖ <br>
-☆⊹ ࣪ ┆ ˖ ࣪　⊹ ࣪ ★ ⋆.˚  ⊹ ࣪<br>
-   ࣪ ˖⋆˚★ ₊ ⊹　  ࣪˖ ࣪ ₊  ࣪ ˖　<br>
-. ݁　⊹ ࣪ ˖　　　 ࣪ ˖<br>
-　　.  ݁　　　  ݁<br>
-　　. 
-</div>
 <div class="header compact">MySpace Productivity ✨</div>
 
-<!-- MAIN CONTENT -->
 <div class="container compact">
   <div class="box compact">
     <h4>Theme</h4>
@@ -253,8 +245,8 @@ th,td{border:1px solid hotpink;padding:6px;text-align:center}
     <table id="sheet" class="compact">
       <tr><th>Start</th><th>End</th><th>Minutes</th><th>Del</th></tr>
     </table>
-    <button onclick="addRow()">+ Add Row</button>
-    <button onclick="clearRows()">Clear</button>
+    <button onclick="addRow()" class="compact">+ Add Row</button>
+    <button onclick="clearRows()" class="compact">Clear</button>
     <div id="timeDisplay"></div>
     <div id="graph" class="compact"><div id="bar"></div></div>
   </div>
@@ -268,115 +260,106 @@ th,td{border:1px solid hotpink;padding:6px;text-align:center}
     <div class="box compact">
       <h3>Comment Wall</h3>
       <div id="comments" class="compact"></div>
-      <input id="commentInput">
-      <button onclick="postComment()">Post</button>
+      <input id="commentInput" class="compact">
+      <button onclick="postComment()" class="compact">Post</button>
     </div>
   </div>
 </div>
 
 <div id="goalPopup">✨ Goal Reached! ✨</div>
 
+<div id="asciiBG">
+┆　┆　┆　┆　┆
+┆　┆  ࣪ ˖☆ ࣪⭑┆ ݁˖ .☆ . ݁ ˖ 
+☆⊹ ࣪ ┆ ˖ ࣪　⊹ ࣪ ★ ⋆.˚  ⊹ ࣪
+   ࣪ ˖⋆˚★ ₊ ⊹　  ࣪˖ ࣪ ₊  ࣪ ˖　
+. ݁　⊹ ࣪ ˖　　　 ࣪ ˖
+　　.  ݁　　　  ݁
+　　. 
+</div>
+
 <script>
+// JS logic (settings, rows, comments, neon bar)
 window.onload=function(){
-  const settingsBtn=document.getElementById("settingsBtn");
-  const settingsPanel=document.getElementById("settingsPanel");
-  const bgUpload=document.getElementById("bgUpload");
-  const bgFit=document.getElementById("bgFit");
-  const bgDark=document.getElementById("bgDark");
-  const bgBlur=document.getElementById("bgBlur");
-  const colLeft=document.getElementById("colLeft");
-  const colCenter=document.getElementById("colCenter");
-  const colRight=document.getElementById("colRight");
-  const themeSelect=document.getElementById("themeSelect");
-  const notes=document.getElementById("notes");
-  const sheet=document.getElementById("sheet");
-  const timeDisplay=document.getElementById("timeDisplay");
-  const bar=document.getElementById("bar");
-  const goalPopup=document.getElementById("goalPopup");
-  const commentInput=document.getElementById("commentInput");
-  const comments=document.getElementById("comments");
+const settingsBtn=document.getElementById("settingsBtn");
+const settingsPanel=document.getElementById("settingsPanel");
+const bgUpload=document.getElementById("bgUpload");
+const bgFit=document.getElementById("bgFit");
+const bgDark=document.getElementById("bgDark");
+const bgBlur=document.getElementById("bgBlur");
+const colLeft=document.getElementById("colLeft");
+const colCenter=document.getElementById("colCenter");
+const colRight=document.getElementById("colRight");
+const themeSelect=document.getElementById("themeSelect");
+const notes=document.getElementById("notes");
+const sheet=document.getElementById("sheet");
+const timeDisplay=document.getElementById("timeDisplay");
+const bar=document.getElementById("bar");
+const goalPopup=document.getElementById("goalPopup");
+const commentInput=document.getElementById("commentInput");
+const comments=document.getElementById("comments");
 
-  // SETTINGS TOGGLE
-  settingsBtn.onclick=()=>settingsPanel.classList.toggle("open");
+// Toggle Settings
+settingsBtn.onclick=()=>settingsPanel.classList.toggle("open");
 
-  // BACKGROUND
-  const bg=document.createElement("div"); bg.id="customBG"; document.body.appendChild(bg);
-  const overlay=document.createElement("div"); overlay.id="bgOverlay"; document.body.appendChild(overlay);
-  if(localStorage.bgImage) bg.style.backgroundImage=`url(${localStorage.bgImage})`;
-  if(localStorage.bgFit) applyBgFit(localStorage.bgFit);
-  if(localStorage.bgDark) overlay.style.opacity=localStorage.bgDark;
-  if(localStorage.bgBlur) overlay.style.backdropFilter=`blur(${localStorage.bgBlur}px)`;
-  bgUpload.onchange=e=>{let r=new FileReader();r.onload=()=>{bg.style.backgroundImage=`url(${r.result})`;localStorage.bgImage=r.result};r.readAsDataURL(e.target.files[0]);}
-  bgFit.value=localStorage.bgFit||"fill";
-  bgFit.onchange=()=>{applyBgFit(bgFit.value);localStorage.bgFit=bgFit.value;}
-  function applyBgFit(v){switch(v){case"fill":bg.style.backgroundSize="cover";bg.style.backgroundRepeat="no-repeat";bg.style.backgroundPosition="center";break;case"fit":bg.style.backgroundSize="contain";bg.style.backgroundRepeat="no-repeat";bg.style.backgroundPosition="center";break;case"stretch":bg.style.backgroundSize="100% 100%";bg.style.backgroundRepeat="no-repeat";bg.style.backgroundPosition="center";break;case"tile":bg.style.backgroundSize="auto";bg.style.backgroundRepeat="repeat";bg.style.backgroundPosition="top left";break;case"center":bg.style.backgroundSize="auto";bg.style.backgroundRepeat="no-repeat";bg.style.backgroundPosition="center";break;case"span":bg.style.backgroundSize="cover";bg.style.backgroundRepeat="no-repeat";bg.style.backgroundPosition="center";break;}}
-  bgDark.oninput=()=>{overlay.style.opacity=bgDark.value;localStorage.bgDark=bgDark.value;}
-  bgBlur.oninput=()=>{overlay.style.backdropFilter=`blur(${bgBlur.value}px)`;localStorage.bgBlur=bgBlur.value;}
-  function resetBG(){localStorage.removeItem("bgImage");localStorage.removeItem("bgFit");localStorage.removeItem("bgDark");localStorage.removeItem("bgBlur");location.reload();}
+// Background
+const bg=document.createElement("div"); bg.id="customBG"; document.body.appendChild(bg);
+const overlay=document.createElement("div"); overlay.id="bgOverlay"; document.body.appendChild(overlay);
+if(localStorage.bgImage) bg.style.backgroundImage=`url(${localStorage.bgImage})`;
+if(localStorage.bgFit) applyBgFit(localStorage.bgFit);
+if(localStorage.bgDark) overlay.style.opacity=localStorage.bgDark;
+if(localStorage.bgBlur) overlay.style.backdropFilter=`blur(${localStorage.bgBlur}px)`;
+bgUpload.onchange=e=>{let r=new FileReader();r.onload=()=>{bg.style.backgroundImage=`url(${r.result})`;localStorage.bgImage=r.result};r.readAsDataURL(e.target.files[0]);}
+bgFit.value=localStorage.bgFit||"fill";
+bgFit.onchange=()=>{applyBgFit(bgFit.value);localStorage.bgFit=bgFit.value;}
+function applyBgFit(v){switch(v){case"fill":bg.style.backgroundSize="cover";bg.style.backgroundRepeat="no-repeat";bg.style.backgroundPosition="center";break;case"fit":bg.style.backgroundSize="contain";bg.style.backgroundRepeat="no-repeat";bg.style.backgroundPosition="center";break;case"stretch":bg.style.backgroundSize="100% 100%";bg.style.backgroundRepeat="no-repeat";bg.style.backgroundPosition="center";break;case"tile":bg.style.backgroundSize="auto";bg.style.backgroundRepeat="repeat";bg.style.backgroundPosition="top left";break;case"center":bg.style.backgroundSize="auto";bg.style.backgroundRepeat="no-repeat";bg.style.backgroundPosition="center";break;case"span":bg.style.backgroundSize="cover";bg.style.backgroundRepeat="no-repeat";bg.style.backgroundPosition="center";break;}}
+bgDark.oninput=()=>{overlay.style.opacity=bgDark.value;localStorage.bgDark=bgDark.value;}
+bgBlur.oninput=()=>{overlay.style.backdropFilter=`blur(${bgBlur.value}px)`;localStorage.bgBlur=bgBlur.value;}
+function resetBG(){localStorage.removeItem("bgImage");localStorage.removeItem("bgFit");localStorage.removeItem("bgDark");localStorage.removeItem("bgBlur");location.reload();}
 
-  // COLUMN WIDTHS
-  function applyColWidths(){let l=Number(colLeft.value),c=Number(colCenter.value),r=Number(colRight.value),t=l+c+r;if(t>100){l=Math.round(l/t*100);c=Math.round(c/t*100);r=100-l-c;}document.querySelector(".container").style.gridTemplateColumns=`${l}% ${c}% ${r}%`;localStorage.colLeft=l;localStorage.colCenter=c;localStorage.colRight=r;}
-  if(localStorage.colLeft) colLeft.value=localStorage.colLeft;
-  if(localStorage.colCenter) colCenter.value=localStorage.colCenter;
-  if(localStorage.colRight) colRight.value=localStorage.colRight;
-  applyColWidths();
+// Column widths
+function applyColWidths(){let l=Number(colLeft.value),c=Number(colCenter.value),r=Number(colRight.value),t=l+c+r;if(t>100){l=Math.round(l/t*100);c=Math.round(c/t*100);r=100-l-c;}document.querySelector(".container").style.gridTemplateColumns=`${l}% ${c}% ${r}%`;localStorage.colLeft=l;localStorage.colCenter=c;localStorage.colRight=r;}
+if(localStorage.colLeft) colLeft.value=localStorage.colLeft;
+if(localStorage.colCenter) colCenter.value=localStorage.colCenter;
+if(localStorage.colRight) colRight.value=localStorage.colRight;
+applyColWidths();
 
-  // THEME
-  const themeColors={scene:"#ff00aa",kawaii:"#ff1493",pastel:"#9966ff",gothic:"#ff66cc",emo:"red",neon:"#39ff14",y2k:"white"};
-  themeSelect.value=localStorage.theme||"scene";
-  document.body.className=themeSelect.value+" compact";
-  themeSelect.onchange=()=>{document.body.className=themeSelect.value+" compact";localStorage.theme=themeSelect.value;updateTotal();}
+// Theme
+const themeColors={scene:"#ff00aa",kawaii:"#ff1493",pastel:"#9966ff",gothic:"#ff66cc",emo:"red",neon:"#39ff14",y2k:"white"};
+themeSelect.value=localStorage.theme||"scene";
+document.body.className=themeSelect.value+" compact";
+themeSelect.onchange=()=>{document.body.className=themeSelect.value+" compact";localStorage.theme=themeSelect.value;updateTotal()}
 
-  // NOTES
-  notes.value=localStorage.notes||"";
-  notes.oninput=()=>localStorage.notes=notes.value;
+// Notes
+notes.value=localStorage.notes||"";
+notes.oninput=()=>localStorage.notes=notes.value;
 
-  // ROWS
-  function addRow(d={}) {
-    const row = sheet.insertRow();
-    const start = document.createElement("input");
-    const end = document.createElement("input");
-    const mins = document.createElement("input");
-    const del = document.createElement("button");
-    start.type="time"; end.type="time"; mins.type="number"; mins.readOnly=true;
-    del.textContent="❌"; del.onclick=()=>{row.remove();saveRows();updateTotal();};
-    row.insertCell(0).appendChild(start);
-    row.insertCell(1).appendChild(end);
-    row.insertCell(2).appendChild(mins);
-    row.insertCell(3).appendChild(del);
-    function calc(){if(!start.value||!end.value)return; let s=new Date("1970-01-01T"+start.value), e=new Date("1970-01-01T"+end.value); let diff=Math.max(0,(e-s)/60000); mins.value=Math.round(diff); saveRows(); updateTotal();}
-    start.onchange=start.onblur=end.onchange=end.onblur=calc;
-    if(d.start) start.value=d.start;
-    if(d.end) end.value=d.end;
-    if(d.mins) mins.value=d.mins;
-  }
-  function saveRows(){let data=[];document.querySelectorAll("#sheet tr").forEach((r,i)=>{if(i==0)return; const inputs=r.querySelectorAll("input"); data.push({start:inputs[0].value,end:inputs[1].value,mins:inputs[2].value});}); localStorage.rows=JSON.stringify(data);}
-  function loadRows(){let data=JSON.parse(localStorage.rows||"[]"); if(data.length==0)addRow(); else data.forEach(d=>addRow(d)); updateTotal();}
-  function clearRows(){localStorage.removeItem("rows"); location.reload();}
+// Rows
+function addRow(d={}){const row=sheet.insertRow();const start=document.createElement("input"),end=document.createElement("input"),mins=document.createElement("input"),del=document.createElement("button");start.type="time";end.type="time";mins.type="number";mins.readOnly=true;del.textContent="❌";del.onclick=()=>{row.remove();saveRows();updateTotal();};if(sheet.rows.length>1){const le=sheet.rows[sheet.rows.length-1].cells[1].querySelector("input");if(le&&le.value&&!d.start)start.value=le.value;}start.value=d.start||"";end.value=d.end||"";mins.value=d.mins||"";row.insertCell(0).appendChild(start);row.insertCell(1).appendChild(end);row.insertCell(2).appendChild(mins);row.insertCell(3).appendChild(del);function calc(){if(!start.value||!end.value)return;let s=new Date("1970-01-01T"+start.value),e=new Date("1970-01-01T"+end.value);let diff=(e-s)/60000;if(diff<0)diff=0;mins.value=Math.round(diff);saveRows();updateTotal();if(row===sheet.rows[sheet.rows.length-1]&&end.value)addRow();}start.onchange=start.onblur=end.onchange=end.onblur=calc;}
+function saveRows(){let data=[];document.querySelectorAll("#sheet tr").forEach((r,i)=>{if(i===0)return;const inputs=r.querySelectorAll("input");data.push({start:inputs[0].value,end:inputs[1].value,mins:inputs[2].value});});localStorage.rows=JSON.stringify(data);}
+function loadRows(){let data=JSON.parse(localStorage.rows||"[]");if(data.length===0)addRow();else data.forEach(d=>addRow(d));addRow();updateTotal();}
+function clearRows(){localStorage.removeItem("rows");location.reload();}
 
-  // COMMENTS
-  function postComment(){if(!commentInput.value.trim())return; const d=document.createElement("div"); const now=new Date(); d.textContent=`[${now.getHours()}:${now.getMinutes().toString().padStart(2,"0")}] ${commentInput.value}`; comments.appendChild(d); let saved=JSON.parse(localStorage.comments||"[]"); saved.push(d.textContent); localStorage.comments=JSON.stringify(saved); commentInput.value="";}
-  function loadComments(){let saved=JSON.parse(localStorage.comments||"[]"); saved.forEach(c=>{ const d=document.createElement("div"); d.textContent=c; comments.appendChild(d);});}
+// Comments
+function postComment(){if(!commentInput.value.trim())return;const d=document.createElement("div");const now=new Date();d.textContent=`[${now.getHours()}:${now.getMinutes().toString().padStart(2,"0")}] ${commentInput.value}`;comments.appendChild(d);let saved=JSON.parse(localStorage.comments||"[]");saved.push(d.textContent);localStorage.comments=JSON.stringify(saved);commentInput.value="";}
+function loadComments(){let saved=JSON.parse(localStorage.comments||"[]");saved.forEach(c=>{const d=document.createElement("div");d.textContent=c;comments.appendChild(d);});}
 
-  // UPDATE TOTAL + NEON GLOW
-  function updateTotal(){
-    let total=0;
-    document.querySelectorAll("#sheet tr").forEach((r,i)=>{if(i==0)return; const v=r.cells[2].firstChild.value; if(v) total+=Number(v);});
-    const h=Math.floor(total/60), m=total%60;
-    timeDisplay.innerText=total?`${total} min (${h}h ${m}m)`:"";
-    const pct=Math.min(total/480,1)*100;
-    bar.style.width=pct+"%";
-    const color=themeColors[themeSelect.value]||"hotpink";
-    bar.style.backgroundColor=color;
-    bar.style.color=color;
-    goalPopup.style.color=color;
-    if(total>0 && total<480){const glow=Math.max(8,pct/5+8); bar.style.boxShadow=`0 0 ${glow}px ${color}`; goalPopup.style.boxShadow=`0 0 ${glow}px ${color}`;}
-    if(total>=384 && total<480){bar.classList.add("pulse"); goalPopup.classList.add("pulse");} else{bar.classList.remove("pulse"); goalPopup.classList.remove("pulse");}
-    if(total>=480){goalPopup.style.display="block"; setTimeout(()=>goalPopup.style.display="none",3000);}
-  }
+// Update total + neon glow
+function updateTotal(){
+  let total=0;
+  document.querySelectorAll("#sheet tr").forEach((r,i)=>{if(i===0)return;const v=r.cells[2].firstChild.value;if(v)total+=Number(v);});
+  const h=Math.floor(total/60),m=total%60;
+  timeDisplay.innerText=total?`${total} min (${h}h ${m}m)`:"";
+  const pct=Math.min(total/480,1)*100;
+  bar.style.width=pct+"%";
+  const color=themeColors[themeSelect.value]||"hotpink";
+  bar.style.color=color; goalPopup.style.color=color;
+  if(total>0 && total<480){ const glow=Math.max(8,pct/5+8); bar.style.boxShadow=`0 0 ${glow}px ${color}`; goalPopup.style.boxShadow=`0 0 ${glow}px ${color}`; }
+  if(total>=384&&total<480){bar.classList.add("pulse");goalPopup.classList.add("pulse");} else{bar.classList.remove("pulse");goalPopup.classList.remove("pulse");}
+  if(total>=480){goalPopup.style.display="block";setTimeout(()=>goalPopup.style.display="none",3000);}
+}
 
-  loadRows();
-  loadComments();
+loadRows(); loadComments();
 }
 </script>
 </body>
