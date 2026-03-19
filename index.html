@@ -148,20 +148,53 @@ th,td{border:1px solid hotpink;padding:6px;text-align:center}
 
 /* iPHONE / MOBILE FRIENDLY */
 @media (max-width: 768px){
+  body { font-size: 14px; }
+
   .container{
     grid-template-columns:1fr !important;
-    gap:10px;
-    padding:10px;
+    gap:8px;
+    padding:8px;
   }
 
-  .box{font-size:16px;}
-  input, select, textarea, button{font-size:18px; padding:12px;}
-  table, th, td{font-size:14px;}
-  #settingsPanel{width:100% !important; right:-100% !important;}
-  #settingsPanel.open{right:0 !important;}
-  #settingsBtn{top:5px; right:5px; padding:12px; font-size:18px;}
-  #comments{max-height:200px;}
-  #graph{height:20px;}
+  .box{
+    font-size:14px;
+    padding:10px;
+    border-width:2px;
+  }
+
+  input, select, textarea, button{
+    font-size:16px;
+    padding:8px;
+  }
+
+  table, th, td{
+    font-size:12px;
+    padding:4px;
+  }
+
+  #settingsPanel{
+    width:260px !important;
+    right:-260px !important;
+  }
+
+  #settingsPanel.open{
+    right:0 !important;
+  }
+
+  #settingsBtn{
+    top:5px;
+    right:5px;
+    padding:10px;
+    font-size:16px;
+  }
+
+  #comments{
+    max-height:180px;
+  }
+
+  #graph{height:16px;}
+
+  .header{ font-size:18px; padding:8px; }
 }
 </style>
 </head>
