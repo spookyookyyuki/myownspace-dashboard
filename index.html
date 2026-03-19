@@ -1,299 +1,319 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>MySpace Productivity</title>
-<style>
-/* ---------- BASE ---------- */
-body{margin:0;font-family:"Comic Sans MS",cursive;background:#111;color:#ff66cc}
-body.scene{color:#ff00aa}
-body.kawaii{color:#ff1493}
-body.pastel{color:#9966ff}
-body.gothic{color:#ff66cc}
-body.emo{color:red;font-family:"Courier New"}
-body.neon{color:#39ff14;text-shadow:0 0 6px #39ff14}
-body.y2k{color:white}
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MySpace Productivity ✨</title>
 
-/* ---------- ULTRA COMPACT UI ---------- */
-body.compact{font-size:12px}
-.container.compact{gap:6px;padding:6px}
-.box.compact{padding:6px;border-width:1.5px}
-input.compact,select.compact,textarea.compact,button.compact{padding:4px;font-size:12px}
-table.compact th,table.compact td{padding:2px;font-size:11px}
-#graph.compact{height:12px}
-#settingsBtn.compact{padding:4px;font-size:12px}
-.header.compact{font-size:14px;padding:4px}
-#comments.compact{max-height:100px;font-size:11px}
+<style>
+body{
+  margin:0;
+  font-family:"Comic Sans MS",cursive;
+  background:black;
+  color:#ff66cc;
+  overflow-x:hidden;
+}
+
+/* GLITTER BACKGROUND */
+body::before{
+  content:"";
+  position:fixed;
+  width:100%;
+  height:100%;
+  background:url("https://media.giphy.com/media/l0MYt5jPR6QX5pnqM/giphy.gif");
+  opacity:0.15;
+  z-index:-1;
+}
 
 /* HEADER */
-.header{background:#ff0099;padding:12px;text-align:center;font-size:22px;color:white}
+.header{
+  text-align:center;
+  padding:15px;
+  font-size:26px;
+  background:#000;
+  border-bottom:3px solid hotpink;
+}
 
 /* LAYOUT */
-.container{display:grid;grid-template-columns:25% 50% 25%;gap:15px;padding:15px}
-@media(max-width:900px){.container{grid-template-columns:1fr}}
+.container{
+  display:grid;
+  grid-template-columns:25% 50% 25%;
+  gap:10px;
+  padding:10px;
+}
 
 /* BOX */
-.box{background:rgba(20,20,20,0.85);border:3px solid hotpink;padding:12px;border-radius:10px}
+.box{
+  background:rgba(0,0,0,0.85);
+  border:2px solid hotpink;
+  border-radius:10px;
+  padding:10px;
+}
 
-/* INPUTS */
-input,select,textarea,button{width:100%;margin-top:5px;padding:8px;border-radius:6px;font-size:16px}
-input,textarea,select{background:black;color:#ff66cc;border:1px solid hotpink}
-button{background:#ff0099;color:white;border:none;cursor:pointer}
-button:hover{opacity:0.85}
+/* PROFILE */
+.profile img{
+  width:100%;
+  border-radius:10px;
+}
+
+.counter{
+  font-size:14px;
+  color:#fff;
+}
 
 /* TABLE */
 table{width:100%;border-collapse:collapse}
-th,td{border:1px solid hotpink;padding:6px;text-align:center}
+th,td{border:1px solid hotpink;padding:4px;text-align:center}
 
-/* GRAPH */
-#graph{height:18px;background:#333;margin-top:6px}
-#bar{height:100%;width:0%;background:hotpink;transition:width 0.5s;border-radius:8px}
+input,textarea,button,select{
+  width:100%;
+  margin-top:5px;
+  padding:5px;
+  border-radius:5px;
+  border:none;
+}
+
+button{background:hotpink;color:white;cursor:pointer}
 
 /* COMMENTS */
-#comments{height:120px;overflow:auto;background:black;padding:6px;border:1px solid hotpink}
+#comments{
+  height:120px;
+  overflow:auto;
+  background:black;
+  border:1px solid hotpink;
+  padding:5px;
+}
 
-/* SETTINGS */
-#settingsBtn{position:fixed;top:10px;right:10px;z-index:999;padding:10px}
-#settingsPanel{position:fixed;top:0;right:-300px;width:300px;height:100%;background:#111;border-left:3px solid hotpink;padding:15px;transition:0.3s;z-index:998}
-#settingsPanel.open{right:0}
+/* MUSIC PLAYER */
+#musicPlayer{
+  position:fixed;
+  bottom:20px;
+  left:20px;
+  background:black;
+  border:2px solid hotpink;
+  padding:10px;
+  cursor:move;
+  z-index:999;
+}
 
-/* BACKGROUNDS */
-#customBG{position:fixed;top:0;left:0;width:100%;height:100%;z-index:-3;background-size:cover;background-position:center}
-#bgOverlay{position:fixed;top:0;left:0;width:100%;height:100%;background:black;opacity:0;z-index:-2;backdrop-filter:blur(0px)}
-#asciiBG{position:fixed;top:0;left:0;width:100%;height:100%;z-index:-1;color:#ff66cc;font-family:"Comic Sans MS",cursive;font-size:10px;line-height:10px;white-space:pre;pointer-events:none;opacity:0.25;text-align:center}
+/* AIM POPUP */
+#aim{
+  position:fixed;
+  bottom:20px;
+  right:20px;
+  background:black;
+  border:2px solid hotpink;
+  padding:10px;
+  display:none;
+}
 
-/* POPUP */
-#goalPopup{position:fixed;top:40%;left:50%;transform:translate(-50%,-50%);background:#ff0099;padding:20px;display:none;color:white}
-
-/* NEON PULSE ANIMATION */
-@keyframes neonPulse{0%{box-shadow:0 0 8px currentColor}50%{box-shadow:0 0 20px currentColor}100%{box-shadow:0 0 8px currentColor}}
-#bar.pulse,#goalPopup.pulse{animation:neonPulse 1s infinite alternate;border-radius:8px}
-
-/* MOBILE FRIENDLY */
-@media(max-width:768px){
-  body{font-size:12px}
-  .container{grid-template-columns:1fr !important;gap:6px;padding:6px}
-  .box{font-size:12px;padding:6px;border-width:1.5px}
-  input,select,textarea,button{font-size:12px;padding:4px}
-  table,th,td{font-size:11px;padding:2px}
-  #settingsPanel{width:260px !important;right:-260px !important}
-  #settingsPanel.open{right:0 !important}
-  #settingsBtn{top:5px;right:5px;padding:4px;font-size:12px}
-  #comments{max-height:100px}
-  #graph{height:12px}
-  .header{font-size:14px;padding:4px}
+/* CURSOR TRAIL */
+.sparkle{
+  position:fixed;
+  width:8px;
+  height:8px;
+  background:hotpink;
+  border-radius:50%;
+  pointer-events:none;
+  animation:fade 1s forwards;
+}
+@keyframes fade{
+  to{opacity:0; transform:scale(2);}
 }
 </style>
 </head>
-<body class="scene compact">
 
-<button id="settingsBtn" class="compact">⚙️</button>
-<div id="settingsPanel">
-<h3>Customize</h3>
-<label>Background</label><input type="file" id="bgUpload">
-<label>Background Fit</label>
-<select id="bgFit">
-<option value="fill">Fill</option>
-<option value="fit">Fit</option>
-<option value="stretch">Stretch</option>
-<option value="tile">Tile</option>
-<option value="center">Center</option>
-<option value="span">Span</option>
-</select>
-<label>Dark Overlay</label><input type="range" id="bgDark" min="0" max="0.8" step="0.05">
-<label>Blur</label><input type="range" id="bgBlur" min="0" max="10">
-<h3>Column Widths</h3>
-<label>Left Column (%)</label><input type="number" id="colLeft" min="10" max="50" value="25">
-<label>Center Column (%)</label><input type="number" id="colCenter" min="30" max="80" value="50">
-<label>Right Column (%)</label><input type="number" id="colRight" min="10" max="50" value="25">
-<button onclick="applyColWidths()">Apply Column Widths</button>
-<button onclick="resetBG()">Reset Background</button>
+<body>
+
+<div class="header">
+✨ MySpace Productivity ✨ — <b>ONLINE NOW</b>
 </div>
 
-<div class="header compact">MySpace Productivity ✨</div>
+<div class="container">
 
-<div class="container compact">
-  <div class="box compact">
-    <h4>Theme</h4>
-    <select id="themeSelect">
-      <option value="scene">Scene</option>
-      <option value="kawaii">Kawaii</option>
-      <option value="pastel">Pastel</option>
-      <option value="gothic">Gothic</option>
-      <option value="emo">Emo</option>
-      <option value="neon">Neon</option>
-      <option value="y2k">Y2K</option>
-    </select>
+<!-- PROFILE -->
+<div class="box profile">
+  <h3>💖 Profile</h3>
+  <img src="https://i.imgur.com/8Km9tLL.jpg">
+
+  <p>✨ mood: productive but dramatic ✨</p>
+
+  <div class="counter" id="views"></div>
+
+  <h4>🎧 Playlist</h4>
+  <select id="playlist"></select>
+  <button onclick="toggleMusic()">Play / Pause</button>
+</div>
+
+<!-- PRODUCTIVITY -->
+<div class="box">
+  <h3>⏱ Time Tracker</h3>
+  <table id="sheet">
+    <tr><th>Start</th><th>End</th><th>Min</th></tr>
+  </table>
+  <button onclick="addRow()">+ Add</button>
+  <div id="total"></div>
+</div>
+
+<!-- SIDE -->
+<div>
+  <div class="box">
+    <h3>📝 Notes</h3>
+    <textarea id="notes"></textarea>
   </div>
 
-  <div class="box compact">
-    <h3>Production Time</h3>
-    <table id="sheet" class="compact">
-      <tr><th>Start</th><th>End</th><th>Minutes</th><th>Del</th></tr>
-    </table>
-    <button onclick="addRow()" class="compact">+ Add Row</button>
-    <button onclick="clearRows()" class="compact">Clear</button>
-    <div id="timeDisplay"></div>
-    <div id="graph" class="compact"><div id="bar"></div></div>
-  </div>
+  <br>
 
-  <div>
-    <div class="box compact">
-      <h3>Notes</h3>
-      <textarea id="notes"></textarea>
-    </div>
-    <br>
-    <div class="box compact">
-      <h3>Comment Wall</h3>
-      <div id="comments" class="compact"></div>
-      <input id="commentInput" class="compact">
-      <button onclick="postComment()" class="compact">Post</button>
-    </div>
+  <div class="box">
+    <h3>💬 Comment Wall</h3>
+    <div id="comments"></div>
+    <input id="commentInput">
+    <button onclick="postComment()">Post</button>
   </div>
 </div>
 
-<div id="goalPopup">✨ Goal Reached! ✨</div>
+</div>
 
-<div id="asciiBG">
-┆　┆　┆　┆　┆
-┆　┆  ࣪ ˖☆ ࣪⭑┆ ݁˖ .☆ . ݁ ˖ 
-☆⊹ ࣪ ┆ ˖ ࣪　⊹ ࣪ ★ ⋆.˚  ⊹ ࣪
-   ࣪ ˖⋆˚★ ₊ ⊹　  ࣪˖ ࣪ ₊  ࣪ ˖　
-. ݁　⊹ ࣪ ˖　　　 ࣪ ˖
-　　.  ݁　　　  ݁
-　　. 
+<!-- MUSIC -->
+<div id="musicPlayer">
+🎵 Now Playing<br>
+<audio id="audio" loop></audio>
+</div>
+
+<!-- AIM -->
+<div id="aim">
+<b>Friend:</b> omg ur being productive??? 😭💀
 </div>
 
 <script>
-window.onload=function(){
-const S=id=>document.getElementById(id);
-const settingsBtn=S("settingsBtn"),settingsPanel=S("settingsPanel"),bgUpload=S("bgUpload"),bgFit=S("bgFit"),bgDark=S("bgDark"),bgBlur=S("bgBlur"),colLeft=S("colLeft"),colCenter=S("colCenter"),colRight=S("colRight"),themeSelect=S("themeSelect"),notes=S("notes"),sheet=S("sheet"),timeDisplay=S("timeDisplay"),bar=S("bar"),goalPopup=S("goalPopup"),commentInput=S("commentInput"),comments=S("comments");
-let goalShown=false;
+const audio=document.getElementById("audio");
 
-// SETTINGS TOGGLE
-settingsBtn.onclick=()=>settingsPanel.classList.toggle("open");
+/* PLAYLIST */
+const songs=[
+  {name:"Y2K Vibes",src:"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"},
+  {name:"Chill Coding",src:"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3"},
+  {name:"Late Night",src:"https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3"}
+];
 
-// BACKGROUND
-const bg=document.createElement("div"),overlay=document.createElement("div");
-bg.id="customBG";overlay.id="bgOverlay";document.body.appendChild(bg);document.body.appendChild(overlay);
-if(localStorage.bgImage) bg.style.backgroundImage=`url(${localStorage.bgImage})`;
-if(localStorage.bgFit) applyBgFit(localStorage.bgFit);
-if(localStorage.bgDark) overlay.style.opacity=localStorage.bgDark;
-if(localStorage.bgBlur) overlay.style.backdropFilter=`blur(${localStorage.bgBlur}px)`;
-bgUpload.onchange=e=>{if(!e.target.files[0])return;let r=new FileReader();r.onload=()=>{bg.style.backgroundImage=`url(${r.result})`;localStorage.bgImage=r.result};r.readAsDataURL(e.target.files[0])};
-bgFit.value=localStorage.bgFit||"fill";
-bgFit.onchange=()=>{applyBgFit(bgFit.value);localStorage.bgFit=bgFit.value;}
-bgDark.oninput=()=>{overlay.style.opacity=bgDark.value;localStorage.bgDark=bgDark.value;}
-bgBlur.oninput=()=>{overlay.style.backdropFilter=`blur(${bgBlur.value}px)`;localStorage.bgBlur=bgBlur.value;}
-function applyBgFit(v){switch(v){case"fill":bg.style.backgroundSize="cover";bg.style.backgroundRepeat="no-repeat";bg.style.backgroundPosition="center";break;case"fit":bg.style.backgroundSize="contain";bg.style.backgroundRepeat="no-repeat";bg.style.backgroundPosition="center";break;case"stretch":bg.style.backgroundSize="100% 100%";bg.style.backgroundRepeat="no-repeat";bg.style.backgroundPosition="center";break;case"tile":bg.style.backgroundSize="auto";bg.style.backgroundRepeat="repeat";bg.style.backgroundPosition="top left";break;case"center":bg.style.backgroundSize="auto";bg.style.backgroundRepeat="no-repeat";bg.style.backgroundPosition="center";break;case"span":bg.style.backgroundSize="cover";bg.style.backgroundRepeat="no-repeat";bg.style.backgroundPosition="center";break;} }
-function resetBG(){localStorage.removeItem("bgImage");localStorage.removeItem("bgFit");localStorage.removeItem("bgDark");localStorage.removeItem("bgBlur");location.reload();}
+const playlist=document.getElementById("playlist");
+songs.forEach((s,i)=>{
+  const o=document.createElement("option");
+  o.value=i;
+  o.textContent=s.name;
+  playlist.appendChild(o);
+});
 
-// COLUMN WIDTHS
-function applyColWidths(){let l=Number(colLeft.value),c=Number(colCenter.value),r=Number(colRight.value),t=l+c+r;if(t!==100){l=Math.round(l/t*100);c=Math.round(c/t*100);r=100-l-c;}document.querySelector(".container").style.gridTemplateColumns=`${l}% ${c}% ${r}%`;localStorage.colLeft=l;localStorage.colCenter=c;localStorage.colRight=r;}
-colLeft.value=localStorage.colLeft||colLeft.value;
-colCenter.value=localStorage.colCenter||colCenter.value;
-colRight.value=localStorage.colRight||colRight.value;
-applyColWidths();
-
-// THEME
-const themeColors={scene:"#ff00aa",kawaii:"#ff1493",pastel:"#9966ff",gothic:"#ff66cc",emo:"red",neon:"#39ff14",y2k:"white"};
-themeSelect.value=localStorage.theme||"scene";
-document.body.classList.add(themeSelect.value,"compact");
-themeSelect.onchange=()=>{
-  Object.keys(themeColors).forEach(t=>document.body.classList.remove(t));
-  document.body.classList.add(themeSelect.value,"compact");
-  localStorage.theme=themeSelect.value;
-  updateTotal();
+playlist.onchange=()=>{
+  audio.src=songs[playlist.value].src;
+  audio.play();
 };
 
-// NOTES
+audio.src=songs[0].src;
+
+function toggleMusic(){
+  if(audio.paused) audio.play();
+  else audio.pause();
+}
+
+/* VIEWS COUNTER */
+let views=localStorage.views?parseInt(localStorage.views):0;
+views++;
+localStorage.views=views;
+document.getElementById("views").textContent=`👀 Profile Views: ${views}`;
+
+/* ROWS */
+const sheet=document.getElementById("sheet");
+function addRow(){
+  const r=sheet.insertRow();
+  const s=document.createElement("input");
+  const e=document.createElement("input");
+  const m=document.createElement("input");
+
+  s.type="time"; e.type="time"; m.readOnly=true;
+
+  r.insertCell(0).appendChild(s);
+  r.insertCell(1).appendChild(e);
+  r.insertCell(2).appendChild(m);
+
+  function calc(){
+    if(!s.value||!e.value) return;
+    const [sh,sm]=s.value.split(":").map(Number);
+    const [eh,em]=e.value.split(":").map(Number);
+    m.value=Math.max(0,(eh*60+em)-(sh*60+sm));
+    updateTotal();
+  }
+
+  s.onchange=e.onchange=calc;
+}
+
+function updateTotal(){
+  let t=0;
+  [...sheet.rows].slice(1).forEach(r=>{
+    const v=r.cells[2].firstChild.value;
+    if(v) t+=+v;
+  });
+  document.getElementById("total").textContent=`Total: ${t} min`;
+}
+
+/* NOTES SAVE */
+const notes=document.getElementById("notes");
 notes.value=localStorage.notes||"";
 notes.oninput=()=>localStorage.notes=notes.value;
 
-// ROWS
-function addRow(d={}) {
-  const row = sheet.insertRow();
-  const start = document.createElement("input");
-  const end = document.createElement("input");
-  const mins = document.createElement("input");
-  const del = document.createElement("button");
+/* COMMENTS */
+function postComment(){
+  const c=document.getElementById("commentInput");
+  if(!c.value.trim()) return;
+  const d=document.createElement("div");
+  d.textContent=c.value;
+  document.getElementById("comments").appendChild(d);
 
-  start.type="time"; end.type="time"; mins.type="number"; mins.readOnly=true; del.textContent="❌";
-  del.onclick = ()=>{row.remove(); saveRows(); updateTotal();};
+  let saved=JSON.parse(localStorage.comments||"[]");
+  saved.push(c.value);
+  localStorage.comments=JSON.stringify(saved);
 
-  // AUTO SET START TIME to previous row's END if no start is provided
-  if(sheet.rows.length > 1 && !d.start){
-    const prevEnd = sheet.rows[sheet.rows.length-1].cells[1].querySelector("input");
-    if(prevEnd && prevEnd.value) start.value = prevEnd.value;
+  c.value="";
+}
+
+/* LOAD COMMENTS */
+(JSON.parse(localStorage.comments||"[]")).forEach(t=>{
+  const d=document.createElement("div");
+  d.textContent=t;
+  document.getElementById("comments").appendChild(d);
+});
+
+/* CURSOR TRAIL */
+document.addEventListener("mousemove",e=>{
+  const s=document.createElement("div");
+  s.className="sparkle";
+  s.style.left=e.pageX+"px";
+  s.style.top=e.pageY+"px";
+  document.body.appendChild(s);
+  setTimeout(()=>s.remove(),1000);
+});
+
+/* AIM POPUP RANDOM */
+setInterval(()=>{
+  const aim=document.getElementById("aim");
+  aim.style.display="block";
+  setTimeout(()=>aim.style.display="none",4000);
+},15000);
+
+/* DRAG PLAYER */
+const player=document.getElementById("musicPlayer");
+let down=false,offset=[0,0];
+player.onmousedown=e=>{
+  down=true;
+  offset=[player.offsetLeft-e.clientX,player.offsetTop-e.clientY];
+};
+document.onmouseup=()=>down=false;
+document.onmousemove=e=>{
+  if(down){
+    player.style.left=(e.clientX+offset[0])+"px";
+    player.style.top=(e.clientY+offset[1])+"px";
   }
-
-  start.value = d.start || start.value || "";
-  end.value = d.end || "";
-  mins.value = d.mins || "";
-
-  row.insertCell(0).appendChild(start);
-  row.insertCell(1).appendChild(end);
-  row.insertCell(2).appendChild(mins);
-  row.insertCell(3).appendChild(del);
-
-  function calc(){
-    if(!start.value || !end.value){ mins.value=""; updateTotal(); return; }
-    const [sh, sm] = start.value.split(":").map(x=>parseInt(x,10));
-    const [eh, em] = end.value.split(":").map(x=>parseInt(x,10));
-    if([sh, sm, eh, em].some(x=>isNaN(x))){ mins.value=""; updateTotal(); return; }
-    let diff = (eh*60+em) - (sh*60+sm); 
-    if(diff<0) diff=0;
-    mins.value = diff;
-    saveRows(); updateTotal();
-
-    // AUTO ADD NEW ROW if last row is filled
-    const lastRow = sheet.rows[sheet.rows.length-1];
-    if(row === lastRow && start.value && end.value){ addRow(); }
-  }
-
-  start.addEventListener("change", calc);
-  start.addEventListener("blur", calc);
-  end.addEventListener("change", calc);
-  end.addEventListener("blur", calc);
-}
-
-function saveRows(){
-  const data=[]; document.querySelectorAll("#sheet tr").forEach((r,i)=>{
-    if(i===0) return;
-    const inputs=r.querySelectorAll("input");
-    data.push({start:inputs[0].value,end:inputs[1].value,mins:inputs[2].value});
-  });
-  localStorage.rows=JSON.stringify(data);
-}
-function loadRows(){
-  let data=[];
-  try{data=JSON.parse(localStorage.rows||"[]");}catch(e){localStorage.removeItem("rows");}
-  if(data.length===0) addRow(); else data.forEach(d=>addRow(d)); addRow(); updateTotal();
-}
-function clearRows(){localStorage.removeItem("rows"); location.reload();}
-
-// COMMENTS
-function postComment(){if(!commentInput.value.trim())return;const d=document.createElement("div");const now=new Date();d.textContent=`[${now.getHours().toString().padStart(2,"0")}:${now.getMinutes().toString().padStart(2,"0")}] ${commentInput.value}`;comments.appendChild(d);let saved=[];try{saved=JSON.parse(localStorage.comments||"[]");}catch(e){}saved.push(d.textContent);localStorage.comments=JSON.stringify(saved);commentInput.value="";}
-function loadComments(){let saved=[];try{saved=JSON.parse(localStorage.comments||"[]");}catch(e){}saved.forEach(c=>{const d=document.createElement("div");d.textContent=c;comments.appendChild(d);});}
-
-// TOTAL + GRAPH
-function updateTotal(){
-  let total=0;
-  document.querySelectorAll("#sheet tr").forEach((r,i)=>{if(i===0) return; const v=r.cells[2].firstChild.value; if(v) total+=Number(v);});
-  const h=Math.floor(total/60), m=total%60;
-  timeDisplay.innerText=total?`${total} min (${h}h ${m}m)`:"";
-  const pct=Math.min(total/480,1)*100;
-  bar.style.width=pct+"%";
-  const color=themeColors[themeSelect.value]||"hotpink";
-  bar.style.backgroundColor=color; goalPopup.style.color=color;
-
-  if(total>0 && total<480){ const glow=Math.max(8,pct/5+8); bar.style.boxShadow=`0 0 ${glow}px ${color}`; goalPopup.style.boxShadow=`0 0 ${glow}px ${color}`;}
-  if(total>=384 && total<480){ bar.classList.add("pulse"); goalPopup.classList.add("pulse"); } else { bar.classList.remove("pulse"); goalPopup.classList.remove("pulse"); }
-  if(total>=480 && !goalShown){ goalPopup.style.display="block"; goalShown=true; setTimeout(()=>{goalPopup.style.display="none"; goalShown=false;},3000); }
-}
-
-loadRows(); loadComments();
-}
+};
 </script>
+
 </body>
 </html>
