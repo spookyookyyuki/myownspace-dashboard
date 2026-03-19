@@ -210,15 +210,7 @@ themeSelect.onchange=()=>{
 notes.value=localStorage.notes||"";
 notes.oninput=()=>localStorage.notes=notes.value;
 
-  function calc(){
-    if(!start.value||!end.value){ mins.value=""; updateTotal(); return; }
-    const [sh,sm]=start.value.split(":").map(x=>parseInt(x,10));
-    const [eh,em]=end.value.split(":").map(x=>parseInt(x,10));
-    if([sh,sm,eh,em].some(x=>isNaN(x))){ mins.value=""; updateTotal(); return; }
-    let diff=(eh*60+em)-(sh*60+sm); if(diff<0) diff=0;
-    mins.value=diff;
-    saveRows(); updateTotal();
-  }
+// ROWS
 function addRow(d={}) {
   const row = sheet.insertRow();
   const start = document.createElement("input");
@@ -229,12 +221,15 @@ function addRow(d={}) {
   start.type="time"; end.type="time"; mins.type="number"; mins.readOnly=true; del.textContent="❌";
   del.onclick = ()=>{row.remove(); saveRows(); updateTotal();};
 
-  if(sheet.rows.length>1 && !d.start){
+  // AUTO SET START TIME to previous row's END if no start is provided
+  if(sheet.rows.length > 1 && !d.start){
     const prevEnd = sheet.rows[sheet.rows.length-1].cells[1].querySelector("input");
     if(prevEnd && prevEnd.value) start.value = prevEnd.value;
   }
 
-  start.value=d.start||""; end.value=d.end||""; mins.value=d.mins||"";
+  start.value = d.start || start.value || "";
+  end.value = d.end || "";
+  mins.value = d.mins || "";
 
   row.insertCell(0).appendChild(start);
   row.insertCell(1).appendChild(end);
@@ -242,26 +237,20 @@ function addRow(d={}) {
   row.insertCell(3).appendChild(del);
 
   function calc(){
-    if(!start.value||!end.value){ mins.value=""; updateTotal(); return; }
-    const [sh,sm]=start.value.split(":").map(x=>parseInt(x,10));
-    const [eh,em]=end.value.split(":").map(x=>parseInt(x,10));
-    if([sh,sm,eh,em].some(x=>isNaN(x))){ mins.value=""; updateTotal(); return; }
-    let diff=(eh*60+em)-(sh*60+sm); if(diff<0) diff=0;
-    mins.value=diff;
+    if(!start.value || !end.value){ mins.value=""; updateTotal(); return; }
+    const [sh, sm] = start.value.split(":").map(x=>parseInt(x,10));
+    const [eh, em] = end.value.split(":").map(x=>parseInt(x,10));
+    if([sh, sm, eh, em].some(x=>isNaN(x))){ mins.value=""; updateTotal(); return; }
+    let diff = (eh*60+em) - (sh*60+sm); 
+    if(diff<0) diff=0;
+    mins.value = diff;
     saveRows(); updateTotal();
 
-    // AUTO ADD NEW ROW if this is the last row
+    // AUTO ADD NEW ROW if last row is filled
     const lastRow = sheet.rows[sheet.rows.length-1];
-    if(row === lastRow && start.value && end.value){
-      addRow();
-    }
+    if(row === lastRow && start.value && end.value){ addRow(); }
   }
 
-  start.addEventListener("change", calc);
-  start.addEventListener("blur", calc);
-  end.addEventListener("change", calc);
-  end.addEventListener("blur", calc);
-}                  
   start.addEventListener("change", calc);
   start.addEventListener("blur", calc);
   end.addEventListener("change", calc);
@@ -300,12 +289,11 @@ function updateTotal(){
 
   if(total>0 && total<480){ const glow=Math.max(8,pct/5+8); bar.style.boxShadow=`0 0 ${glow}px ${color}`; goalPopup.style.boxShadow=`0 0 ${glow}px ${color}`;}
   if(total>=384 && total<480){ bar.classList.add("pulse"); goalPopup.classList.add("pulse"); } else { bar.classList.remove("pulse"); goalPopup.classList.remove("pulse"); }
-  if(total>=480 && !goalShown){ goalPopup.style.display="block"; goalShown=true; setTimeout(()=>{goalPopup.style.display="none"; goalShown=false;},3000);}
+  if(total>=480 && !goalShown){ goalPopup.style.display="block"; goalShown=true; setTimeout(()=>{goalPopup.style.display="none"; goalShown=false;},3000); }
 }
 
-// INIT
 loadRows(); loadComments();
-};
+}
 </script>
 </body>
 </html>
