@@ -7,13 +7,9 @@
 <title>CHAOS APP 💿</title>
 
 <style>
-:root{
-  --accent:#ff66cc;
-}
-
 body{
   margin:0;
-  font-family:-apple-system,BlinkMacSystemFont;
+  font-family:-apple-system;
   background:#0f0f0f;
   color:white;
 }
@@ -40,8 +36,9 @@ body{
   border:none;
   border-radius:14px;
   font-size:18px;
-  background:var(--accent);
+  background:#ff66cc;
   color:white;
+  margin-top:10px;
 }
 
 /* TIMER */
@@ -51,19 +48,18 @@ body{
   margin:10px 0;
 }
 
-/* PROGRESS BAR */
+/* PROGRESS */
 .barWrap{
   height:10px;
   background:#333;
   border-radius:10px;
   overflow:hidden;
-  margin-top:10px;
 }
 
 .bar{
   height:100%;
   width:0%;
-  background:var(--accent);
+  background:#ff66cc;
 }
 
 /* TABLE */
@@ -71,10 +67,17 @@ table{width:100%;margin-top:10px;}
 td{padding:6px;text-align:center;}
 
 input{
-  width:100%;
-  padding:8px;
-  border-radius:8px;
+  width:90%;
+  padding:6px;
+  border-radius:6px;
   border:none;
+}
+
+.deleteBtn{
+  background:#ff4d6d;
+  border:none;
+  color:white;
+  border-radius:6px;
 }
 
 /* CONFETTI */
@@ -95,9 +98,7 @@ input{
 <div class="header">💿 Productivity</div>
 
 <div class="card">
-
 <div id="liveTimer">00:00</div>
-
 <button class="mainBtn" onclick="toggleTimer()">Start Session</button>
 
 <div class="barWrap">
@@ -105,17 +106,12 @@ input{
 </div>
 
 <div id="daily"></div>
-
 </div>
 
 <div class="card">
-
 <table id="sheet"></table>
-
-<button class="mainBtn" onclick="addRow()">+ Add Session</button>
-
+<button class="mainBtn" onclick="addRow()">+ Add Manual Session</button>
 <div id="total"></div>
-
 </div>
 
 <div id="confetti"></div>
@@ -129,15 +125,17 @@ let startTime=null;
 let interval=null;
 
 function toggleTimer(){
+  const btn=event.target;
+
   if(!running){
     startTime=Date.now();
     running=true;
-    event.target.textContent="Stop Session";
+    btn.textContent="Stop Session";
     interval=setInterval(updateTimer,1000);
   }else{
     running=false;
     clearInterval(interval);
-    event.target.textContent="Start Session";
+    btn.textContent="Start Session";
 
     let mins=Math.floor((Date.now()-startTime)/60000);
     saveSession(mins);
@@ -152,15 +150,13 @@ function updateTimer(){
     String(m).padStart(2,"0")+":"+String(s).padStart(2,"0");
 }
 
-/* SAVE SESSION */
+/* DATA */
 let timeData=JSON.parse(localStorage.timeData||"[]");
 
 function saveSession(mins){
   let now=new Date();
   let end=now.toTimeString().slice(0,5);
-
-  let start=new Date(now-mins*60000)
-    .toTimeString().slice(0,5);
+  let start=new Date(now-mins*60000).toTimeString().slice(0,5);
 
   timeData.push({start,end});
   saveTime();
@@ -169,6 +165,12 @@ function saveSession(mins){
 
 function addRow(){
   timeData.push({start:"",end:""});
+  saveTime();
+  renderTime();
+}
+
+function deleteRow(i){
+  timeData.splice(i,1);
   saveTime();
   renderTime();
 }
@@ -194,18 +196,54 @@ function format(m){
 /* RENDER */
 function renderTime(){
   const table=$("sheet");
-  table.innerHTML="<tr><th>Start</th><th>End</th><th>Min</th></tr>";
+  table.innerHTML="<tr><th>Start</th><th>End</th><th>Min</th><th></th></tr>";
 
-  timeData.forEach(r=>{
+  timeData.forEach((row,i)=>{
     let tr=document.createElement("tr");
 
-    let mins=calcMinutes(r.start,r.end);
+    let s=document.createElement("input");
+    s.type="time";
+    s.value=row.start;
 
-    tr.innerHTML=`
-      <td>${r.start||"-"}</td>
-      <td>${r.end||"-"}</td>
-      <td>${mins||"-"}</td>
-    `;
+    let e=document.createElement("input");
+    e.type="time";
+    e.value=row.end;
+
+    let d=document.createElement("span");
+
+    function update(){
+      timeData[i].start=s.value;
+      timeData[i].end=e.value;
+
+      let mins=calcMinutes(s.value,e.value);
+      d.textContent=mins||"-";
+
+      /* AUTO ROLLOVER */
+      if(e.value){
+        if(!timeData[i+1]){
+          timeData.push({start:e.value,end:""});
+        } else if(!timeData[i+1].start){
+          timeData[i+1].start=e.value;
+        }
+      }
+
+      totalCalc();
+      saveTime();
+    }
+
+    s.onchange=e.onchange=update;
+
+    d.textContent=calcMinutes(row.start,row.end)||"-";
+
+    let del=document.createElement("button");
+    del.textContent="✖";
+    del.className="deleteBtn";
+    del.onclick=()=>deleteRow(i);
+
+    tr.insertCell().appendChild(s);
+    tr.insertCell().appendChild(e);
+    tr.insertCell().appendChild(d);
+    tr.insertCell().appendChild(del);
 
     table.appendChild(tr);
   });
@@ -222,7 +260,6 @@ function totalCalc(){
   let hrs=(total/60).toFixed(1);
   $("daily").textContent="You worked "+hrs+" hrs today";
 
-  /* PROGRESS BAR */
   let percent=Math.min((total/360)*100,100);
   $("progress").style.width=percent+"%";
 
@@ -232,7 +269,6 @@ function totalCalc(){
 /* CONFETTI */
 function triggerConfetti(total){
   let today=new Date().toDateString();
-
   if(total>=360 && localStorage.confettiDay!==today){
     launchConfetti();
     localStorage.confettiDay=today;
@@ -242,7 +278,6 @@ function triggerConfetti(total){
 function launchConfetti(){
   const wrap=$("confetti");
   wrap.innerHTML="";
-
   const symbols=["‧₊˚♪","𝄞","₊˚⊹","✧"];
 
   for(let i=0;i<40;i++){
