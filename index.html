@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>CHAOS APP 💿✨</title>
+<title>CHAOS APP 💿</title>
 
 <style>
 :root{
@@ -13,109 +13,68 @@
 
 body{
   margin:0;
-  font-family:"Segoe UI",sans-serif;
+  font-family:-apple-system,BlinkMacSystemFont;
+  background:#0f0f0f;
   color:white;
-  background:linear-gradient(270deg,#ff9cfb,#a5b4ff,#cafff0);
-  background-size:600% 600%;
-  animation:bg 12s infinite alternate;
 }
 
-/* BACKGROUND ANIMATION */
-@keyframes bg{
-  0%{background-position:0%}
-  100%{background-position:100%}
+/* HEADER */
+.header{
+  padding:16px;
+  font-size:20px;
+  font-weight:600;
 }
 
-/* FLOATS (non-blocking) */
-.bgFX{
-  position:fixed;
-  inset:0;
-  pointer-events:none;
-  z-index:0;
-}
-
-.spark{
-  position:absolute;
-  font-size:14px;
-  opacity:.5;
-  animation:float 12s linear infinite;
-}
-
-@keyframes float{
-  from{transform:translateY(100vh);}
-  to{transform:translateY(-10vh);}
-}
-
-/* APP */
-#app{
-  position:relative;
-  z-index:1;
-}
-
-.page{
-  position:absolute;
-  width:100%;
-  height:100%;
-  left:100%;
-  transition:.3s;
-  overflow-y:auto;
-  padding-bottom:100px;
-}
-.page.active{left:0;}
-
-/* BOX */
-.box{
-  background:rgba(255,255,255,0.2);
-  backdrop-filter:blur(10px);
-  margin:14px;
+/* CARD */
+.card{
+  margin:12px;
   padding:16px;
   border-radius:20px;
+  background:#1c1c1e;
 }
 
-/* NAV */
-#nav{
-  position:fixed;
-  bottom:0;
+/* BUTTON */
+.mainBtn{
   width:100%;
-  height:70px;
-  background:rgba(0,0,0,0.5);
-  display:flex;
-  justify-content:space-around;
-  align-items:center;
-  z-index:2;
-}
-
-button{
-  background:none;
+  padding:16px;
   border:none;
-  color:white;
+  border-radius:14px;
   font-size:18px;
-  padding:10px;
+  background:var(--accent);
+  color:white;
 }
 
-/* INPUTS */
-input,textarea{
-  width:100%;
-  margin-top:8px;
-  padding:10px;
+/* TIMER */
+#liveTimer{
+  font-size:32px;
+  text-align:center;
+  margin:10px 0;
+}
+
+/* PROGRESS BAR */
+.barWrap{
+  height:10px;
+  background:#333;
   border-radius:10px;
-  border:none;
-  font-size:16px;
+  overflow:hidden;
+  margin-top:10px;
+}
+
+.bar{
+  height:100%;
+  width:0%;
+  background:var(--accent);
 }
 
 /* TABLE */
-#sheet{width:100%; margin-top:10px;}
-#sheet td,#sheet th{
-  padding:8px;
-  text-align:center;
-}
+table{width:100%;margin-top:10px;}
+td{padding:6px;text-align:center;}
 
-.deleteBtn{
-  background:#ff4d6d;
-  border:none;
-  color:white;
+input{
+  width:100%;
+  padding:8px;
   border-radius:8px;
-  padding:6px 10px;
+  border:none;
 }
 
 /* CONFETTI */
@@ -124,7 +83,6 @@ input,textarea{
   top:0;
   font-size:18px;
   animation:fall 2s linear forwards;
-  pointer-events:none;
 }
 @keyframes fall{
   to{transform:translateY(100vh);opacity:0;}
@@ -134,43 +92,30 @@ input,textarea{
 
 <body>
 
-<!-- BACKGROUND FX -->
-<div class="bgFX" id="bgFX"></div>
+<div class="header">💿 Productivity</div>
 
-<div id="app">
+<div class="card">
 
-<!-- PROFILE -->
-<div class="page active">
-<div class="box">
-<h3>💖 Profile</h3>
-<input id="name" placeholder="Name">
-<textarea id="bio" placeholder="Bio"></textarea>
-<button onclick="saveProfile()">Save</button>
-<div id="profileView"></div>
-</div>
+<div id="liveTimer">00:00</div>
+
+<button class="mainBtn" onclick="toggleTimer()">Start Session</button>
+
+<div class="barWrap">
+  <div class="bar" id="progress"></div>
 </div>
 
-<!-- TIME -->
-<div class="page">
-<div class="box">
-<h3>⏱ Productivity Tracker ✨</h3>
-
-<table id="sheet"></table>
-
-<button onclick="addRow()">+ Add Session</button>
-
-<div id="total"></div>
 <div id="daily"></div>
 
 </div>
-</div>
 
-</div>
+<div class="card">
 
-<!-- NAV -->
-<div id="nav">
-<button onclick="goPage(0)">🏠</button>
-<button onclick="goPage(1)">⏱</button>
+<table id="sheet"></table>
+
+<button class="mainBtn" onclick="addRow()">+ Add Session</button>
+
+<div id="total"></div>
+
 </div>
 
 <div id="confetti"></div>
@@ -178,54 +123,52 @@ input,textarea{
 <script>
 const $=id=>document.getElementById(id);
 
-/* NAV */
-const pages=[...document.querySelectorAll(".page")];
-function goPage(i){
-  pages.forEach((p,index)=>{
-    p.classList.remove("active");
-    if(index===i)p.classList.add("active");
-  });
-}
+/* TIMER */
+let running=false;
+let startTime=null;
+let interval=null;
 
-/* PROFILE */
-function saveProfile(){
-  localStorage.profile=JSON.stringify({
-    name:$("name").value,
-    bio:$("bio").value
-  });
-  loadProfile();
-}
-function loadProfile(){
-  const p=JSON.parse(localStorage.profile||"{}");
-  $("profileView").innerHTML=`<h4>${p.name||""}</h4><p>${p.bio||""}</p>`;
-}
-loadProfile();
+function toggleTimer(){
+  if(!running){
+    startTime=Date.now();
+    running=true;
+    event.target.textContent="Stop Session";
+    interval=setInterval(updateTimer,1000);
+  }else{
+    running=false;
+    clearInterval(interval);
+    event.target.textContent="Start Session";
 
-/* BACKGROUND SPARKLES (SAFE) */
-function spawnFX(){
-  const wrap=$("bgFX");
-  for(let i=0;i<15;i++){
-    let s=document.createElement("div");
-    s.className="spark";
-    s.textContent="✧";
-    s.style.left=Math.random()*100+"vw";
-    s.style.animationDuration=(8+Math.random()*6)+"s";
-    wrap.appendChild(s);
+    let mins=Math.floor((Date.now()-startTime)/60000);
+    saveSession(mins);
   }
 }
-spawnFX();
 
-/* TIME TRACKER */
+function updateTimer(){
+  let diff=Math.floor((Date.now()-startTime)/1000);
+  let m=Math.floor(diff/60);
+  let s=diff%60;
+  $("liveTimer").textContent=
+    String(m).padStart(2,"0")+":"+String(s).padStart(2,"0");
+}
+
+/* SAVE SESSION */
 let timeData=JSON.parse(localStorage.timeData||"[]");
 
-function addRow(data={start:"",end:""}){
-  timeData.push(data);
+function saveSession(mins){
+  let now=new Date();
+  let end=now.toTimeString().slice(0,5);
+
+  let start=new Date(now-mins*60000)
+    .toTimeString().slice(0,5);
+
+  timeData.push({start,end});
   saveTime();
   renderTime();
 }
 
-function deleteRow(i){
-  timeData.splice(i,1);
+function addRow(){
+  timeData.push({start:"",end:""});
   saveTime();
   renderTime();
 }
@@ -234,6 +177,7 @@ function saveTime(){
   localStorage.timeData=JSON.stringify(timeData);
 }
 
+/* CALC */
 function calcMinutes(s,e){
   if(!s||!e)return 0;
   let [sh,sm]=s.split(":").map(Number);
@@ -247,55 +191,21 @@ function format(m){
   return Math.floor(m/60)+"h "+(m%60)+"m";
 }
 
+/* RENDER */
 function renderTime(){
   const table=$("sheet");
-  table.innerHTML="<tr><th>Start</th><th>End</th><th>Duration</th><th></th></tr>";
+  table.innerHTML="<tr><th>Start</th><th>End</th><th>Min</th></tr>";
 
-  timeData.forEach((row,i)=>{
+  timeData.forEach(r=>{
     let tr=document.createElement("tr");
 
-    let s=document.createElement("input");
-    s.type="time";
-    s.value=row.start;
+    let mins=calcMinutes(r.start,r.end);
 
-    let e=document.createElement("input");
-    e.type="time";
-    e.value=row.end;
-
-    let d=document.createElement("span");
-
-    function update(){
-      timeData[i].start=s.value;
-      timeData[i].end=e.value;
-
-      let mins=calcMinutes(s.value,e.value);
-      d.textContent=mins?format(mins):"-";
-
-      if(e.value){
-        if(!timeData[i+1]){
-          timeData.push({start:e.value,end:""});
-        } else if(!timeData[i+1].start){
-          timeData[i+1].start=e.value;
-        }
-      }
-
-      totalCalc();
-      saveTime();
-    }
-
-    s.onchange=e.onchange=update;
-
-    d.textContent=calcMinutes(row.start,row.end)?format(calcMinutes(row.start,row.end)):"-";
-
-    let del=document.createElement("button");
-    del.textContent="✖";
-    del.className="deleteBtn";
-    del.onclick=()=>deleteRow(i);
-
-    tr.insertCell().appendChild(s);
-    tr.insertCell().appendChild(e);
-    tr.insertCell().appendChild(d);
-    tr.insertCell().appendChild(del);
+    tr.innerHTML=`
+      <td>${r.start||"-"}</td>
+      <td>${r.end||"-"}</td>
+      <td>${mins||"-"}</td>
+    `;
 
     table.appendChild(tr);
   });
@@ -307,10 +217,14 @@ function totalCalc(){
   let total=0;
   timeData.forEach(r=>total+=calcMinutes(r.start,r.end));
 
-  $("total").textContent="Total ✨ "+format(total);
+  $("total").textContent="Total: "+format(total);
 
   let hrs=(total/60).toFixed(1);
-  $("daily").textContent="You worked "+hrs+" hrs today 💖";
+  $("daily").textContent="You worked "+hrs+" hrs today";
+
+  /* PROGRESS BAR */
+  let percent=Math.min((total/360)*100,100);
+  $("progress").style.width=percent+"%";
 
   triggerConfetti(total);
 }
