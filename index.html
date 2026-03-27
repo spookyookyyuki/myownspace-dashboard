@@ -4,57 +4,27 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>CHAOS APP 💿 ✨</title>
+<title>CHAOS APP 💿✨</title>
 
 <style>
 :root{
   --accent:#ff66cc;
-  --bg1:#ff9cfb;
-  --bg2:#a5b4ff;
-  --bg3:#cafff0;
 }
 
 body{
   margin:0;
-  font-family:"Comic Sans MS", "Segoe UI", cursive;
+  font-family:"Segoe UI",sans-serif;
   color:white;
-  background:linear-gradient(270deg,var(--bg1),var(--bg2),var(--bg3));
+  background:linear-gradient(270deg,#ff9cfb,#a5b4ff,#cafff0);
   background-size:600% 600%;
-  animation:bgMove 12s infinite alternate;
-  overflow:hidden;
+  animation:bg 12s infinite alternate;
 }
 
-@keyframes bgMove{
+@keyframes bg{
   0%{background-position:0%}
   100%{background-position:100%}
 }
 
-/* ✨ FLOATING SPARKLES */
-.spark{
-  position:fixed;
-  font-size:14px;
-  opacity:.6;
-  animation:float 10s linear infinite;
-}
-
-@keyframes float{
-  0%{transform:translateY(100vh);}
-  100%{transform:translateY(-10vh);}
-}
-
-/* 🦋 FLOATING EMOJIS */
-.floaty{
-  position:fixed;
-  font-size:18px;
-  animation:drift 12s linear infinite;
-}
-
-@keyframes drift{
-  0%{transform:translateY(100vh) translateX(0);}
-  100%{transform:translateY(-10vh) translateX(40px);}
-}
-
-/* PAGES */
 .page{
   position:absolute;
   width:100%;
@@ -62,19 +32,16 @@ body{
   left:100%;
   transition:.3s;
   overflow:auto;
-  padding-bottom:100px;
+  padding-bottom:90px;
 }
 .page.active{left:0;}
-.page.left{left:-100%;}
 
-/* GLASS BOX */
 .box{
   background:rgba(255,255,255,0.15);
   backdrop-filter:blur(12px);
   margin:12px;
-  padding:14px;
+  padding:12px;
   border-radius:20px;
-  box-shadow:0 0 20px rgba(255,255,255,0.2);
 }
 
 /* NAV */
@@ -83,8 +50,7 @@ body{
   bottom:0;
   width:100%;
   height:70px;
-  background:rgba(255,255,255,0.2);
-  backdrop-filter:blur(20px);
+  background:rgba(0,0,0,0.5);
   display:flex;
   justify-content:space-around;
   align-items:center;
@@ -94,13 +60,7 @@ button{
   background:none;
   border:none;
   color:white;
-  font-size:20px;
-  cursor:pointer;
-}
-
-.activeBtn{
-  color:var(--accent);
-  transform:scale(1.2);
+  font-size:18px;
 }
 
 /* TABLE */
@@ -111,33 +71,19 @@ button{
   background:#ff4d6d;
   border:none;
   color:white;
-  border-radius:8px;
+  border-radius:6px;
 }
 
 /* CONFETTI */
 .sparkle{
-  position:absolute;
-  font-size:18px;
-  animation:spinFall 2s linear forwards;
-}
-
-@keyframes spinFall{
-  0%{transform:translateY(-20px) rotate(0deg);}
-  100%{transform:translateY(100vh) rotate(360deg);opacity:0;}
-}
-
-/* SETTINGS */
-#settingsPanel{
   position:fixed;
-  bottom:-100%;
-  width:100%;
-  height:60%;
-  background:rgba(0,0,0,0.7);
-  backdrop-filter:blur(20px);
-  transition:.4s;
-  padding:20px;
+  top:0;
+  font-size:18px;
+  animation:fall 2s linear forwards;
 }
-#settingsPanel.open{bottom:0;}
+@keyframes fall{
+  to{transform:translateY(100vh);opacity:0;}
+}
 </style>
 </head>
 
@@ -159,11 +105,11 @@ button{
 <!-- TIME -->
 <div class="page">
 <div class="box">
-<h3>⏱ Whimsy Productivity</h3>
+<h3>⏱ Productivity Tracker ✨</h3>
 
 <table id="sheet"></table>
 
-<button onclick="addRow()">+ Add Session ✨</button>
+<button onclick="addRow()">+ Add Session</button>
 <div id="total"></div>
 <div id="daily"></div>
 
@@ -176,12 +122,6 @@ button{
 <div id="nav">
 <button onclick="goPage(0)">🏠</button>
 <button onclick="goPage(1)">⏱</button>
-<button onclick="toggleSettings()">⚙️</button>
-</div>
-
-<!-- SETTINGS -->
-<div id="settingsPanel">
-<h3>Settings 🎀</h3>
 </div>
 
 <div id="confetti"></div>
@@ -191,47 +131,29 @@ const $=id=>document.getElementById(id);
 
 /* NAV */
 const pages=[...document.querySelectorAll(".page")];
-let current=0;
 function goPage(i){
   pages.forEach((p,index)=>{
-    p.classList.remove("active","left");
+    p.classList.remove("active");
     if(index===i)p.classList.add("active");
-    else if(index<i)p.classList.add("left");
   });
-  current=i;
 }
 
-/* SETTINGS */
-function toggleSettings(){
-  $("settingsPanel").classList.toggle("open");
+/* PROFILE */
+function saveProfile(){
+  localStorage.profile=JSON.stringify({
+    name:$("name").value,
+    bio:$("bio").value
+  });
+  loadProfile();
 }
-
-/* FLOATING EFFECTS */
-function spawnFloaters(){
-  const symbols=["✧","✦","₊˚⊹"];
-  for(let i=0;i<20;i++){
-    let s=document.createElement("div");
-    s.className="spark";
-    s.textContent=symbols[Math.floor(Math.random()*symbols.length)];
-    s.style.left=Math.random()*100+"vw";
-    s.style.animationDuration=(6+Math.random()*6)+"s";
-    document.body.appendChild(s);
-  }
-
-  const emojis=["🦋","💖","🎀"];
-  for(let i=0;i<10;i++){
-    let e=document.createElement("div");
-    e.className="floaty";
-    e.textContent=emojis[Math.floor(Math.random()*emojis.length)];
-    e.style.left=Math.random()*100+"vw";
-    e.style.animationDuration=(8+Math.random()*6)+"s";
-    document.body.appendChild(e);
-  }
+function loadProfile(){
+  const p=JSON.parse(localStorage.profile||"{}");
+  $("profileView").innerHTML=`<h4>${p.name||""}</h4><p>${p.bio||""}</p>`;
 }
-spawnFloaters();
+loadProfile();
 
-/* TIME */
-let timeData = JSON.parse(localStorage.timeData || "[]");
+/* TIME TRACKER */
+let timeData=JSON.parse(localStorage.timeData||"[]");
 
 function addRow(data={start:"",end:""}){
   timeData.push(data);
@@ -239,8 +161,14 @@ function addRow(data={start:"",end:""}){
   renderTime();
 }
 
+function deleteRow(i){
+  timeData.splice(i,1);
+  saveTime();
+  renderTime();
+}
+
 function saveTime(){
-  localStorage.timeData = JSON.stringify(timeData);
+  localStorage.timeData=JSON.stringify(timeData);
 }
 
 function calcMinutes(s,e){
@@ -258,7 +186,7 @@ function format(m){
 
 function renderTime(){
   const table=$("sheet");
-  table.innerHTML="<tr><th>Start</th><th>End</th><th>Duration</th></tr>";
+  table.innerHTML="<tr><th>Start</th><th>End</th><th>Duration</th><th></th></tr>";
 
   timeData.forEach((row,i)=>{
     let tr=document.createElement("tr");
@@ -280,27 +208,34 @@ function renderTime(){
       let mins=calcMinutes(s.value,e.value);
       d.textContent=mins?format(mins):"-";
 
-      /* rollover */
-      let lastEnd=null;
-      for(let j=timeData.length-1;j>=0;j--){
-        if(timeData[j].end){lastEnd=timeData[j].end;break;}
-      }
-      if(lastEnd){
-        timeData.push({start:lastEnd,end:""});
+      /* SAFE ROLLOVER */
+      if(e.value){
+        let lastEnd=e.value;
+
+        if(!timeData[i+1]){
+          timeData.push({start:lastEnd,end:""});
+        } else if(!timeData[i+1].start){
+          timeData[i+1].start=lastEnd;
+        }
       }
 
       totalCalc();
       saveTime();
-      renderTime();
     }
 
     s.onchange=e.onchange=update;
 
     d.textContent=calcMinutes(row.start,row.end)?format(calcMinutes(row.start,row.end)):"-";
 
+    let del=document.createElement("button");
+    del.textContent="✖";
+    del.className="deleteBtn";
+    del.onclick=()=>deleteRow(i);
+
     tr.insertCell().appendChild(s);
     tr.insertCell().appendChild(e);
     tr.insertCell().appendChild(d);
+    tr.insertCell().appendChild(del);
 
     table.appendChild(tr);
   });
@@ -311,18 +246,31 @@ function renderTime(){
 function totalCalc(){
   let total=0;
   timeData.forEach(r=>total+=calcMinutes(r.start,r.end));
+
   $("total").textContent="Total ✨ "+format(total);
 
   let hrs=(total/60).toFixed(1);
   $("daily").textContent="You worked "+hrs+" hrs today 💖";
 
-  if(total>=360) confetti();
+  triggerConfetti(total);
 }
 
-function confetti(){
+/* CONFETTI (ONCE PER DAY) */
+function triggerConfetti(total){
+  let today=new Date().toDateString();
+
+  if(total>=360 && localStorage.confettiDay!==today){
+    launchConfetti();
+    localStorage.confettiDay=today;
+  }
+}
+
+function launchConfetti(){
   const wrap=$("confetti");
   wrap.innerHTML="";
+
   const symbols=["‧₊˚♪","𝄞","₊˚⊹","✧"];
+
   for(let i=0;i<40;i++){
     let s=document.createElement("div");
     s.className="sparkle";
@@ -330,6 +278,7 @@ function confetti(){
     s.style.left=Math.random()*100+"vw";
     wrap.appendChild(s);
   }
+
   setTimeout(()=>wrap.innerHTML="",2000);
 }
 
