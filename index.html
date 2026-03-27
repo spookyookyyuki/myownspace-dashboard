@@ -18,6 +18,7 @@ body{
   background:linear-gradient(270deg,#ff9cfb,#a5b4ff,#cafff0);
   background-size:600% 600%;
   animation:bg 12s infinite alternate;
+  overflow:hidden;
 }
 
 @keyframes bg{
@@ -25,6 +26,30 @@ body{
   100%{background-position:100%}
 }
 
+/* ✨ FLOATING SPARKLES (LIMITED = NO LAG) */
+.spark{
+  position:fixed;
+  font-size:14px;
+  opacity:.6;
+  animation:float 12s linear infinite;
+}
+@keyframes float{
+  from{transform:translateY(100vh);}
+  to{transform:translateY(-10vh);}
+}
+
+/* 🦋 FLOATING EMOJIS */
+.floaty{
+  position:fixed;
+  font-size:18px;
+  animation:drift 14s linear infinite;
+}
+@keyframes drift{
+  from{transform:translateY(100vh);}
+  to{transform:translateY(-10vh) translateX(40px);}
+}
+
+/* PAGES */
 .page{
   position:absolute;
   width:100%;
@@ -36,12 +61,14 @@ body{
 }
 .page.active{left:0;}
 
+/* GLASS UI */
 .box{
-  background:rgba(255,255,255,0.15);
+  background:rgba(255,255,255,0.2);
   backdrop-filter:blur(12px);
   margin:12px;
   padding:12px;
   border-radius:20px;
+  box-shadow:0 0 15px rgba(255,255,255,0.3);
 }
 
 /* NAV */
@@ -61,6 +88,7 @@ button{
   border:none;
   color:white;
   font-size:18px;
+  cursor:pointer;
 }
 
 /* TABLE */
@@ -152,6 +180,30 @@ function loadProfile(){
 }
 loadProfile();
 
+/* ✨ SPAWN LIMITED FLOATERS (NO MEMORY LEAK) */
+function spawnFloaters(){
+  const symbols=["✧","✦","₊˚⊹"];
+  for(let i=0;i<12;i++){
+    let s=document.createElement("div");
+    s.className="spark";
+    s.textContent=symbols[Math.floor(Math.random()*symbols.length)];
+    s.style.left=Math.random()*100+"vw";
+    s.style.animationDuration=(8+Math.random()*6)+"s";
+    document.body.appendChild(s);
+  }
+
+  const emojis=["🦋","💖","🎀"];
+  for(let i=0;i<6;i++){
+    let e=document.createElement("div");
+    e.className="floaty";
+    e.textContent=emojis[Math.floor(Math.random()*emojis.length)];
+    e.style.left=Math.random()*100+"vw";
+    e.style.animationDuration=(10+Math.random()*6)+"s";
+    document.body.appendChild(e);
+  }
+}
+spawnFloaters();
+
 /* TIME TRACKER */
 let timeData=JSON.parse(localStorage.timeData||"[]");
 
@@ -210,12 +262,10 @@ function renderTime(){
 
       /* SAFE ROLLOVER */
       if(e.value){
-        let lastEnd=e.value;
-
         if(!timeData[i+1]){
-          timeData.push({start:lastEnd,end:""});
+          timeData.push({start:e.value,end:""});
         } else if(!timeData[i+1].start){
-          timeData[i+1].start=lastEnd;
+          timeData[i+1].start=e.value;
         }
       }
 
@@ -255,7 +305,7 @@ function totalCalc(){
   triggerConfetti(total);
 }
 
-/* CONFETTI (ONCE PER DAY) */
+/* CONFETTI SAFE */
 function triggerConfetti(total){
   let today=new Date().toDateString();
 
